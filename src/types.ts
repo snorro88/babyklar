@@ -1,4 +1,4 @@
-export type CategoryId = 'sleep' | 'clothes' | 'care' | 'transport' | 'food' | 'hospitalBag';
+export type CategoryId = 'sleep' | 'clothes' | 'care' | 'transport' | 'food' | 'hospitalBag' | 'other';
 
 export type Priority = 'important' | 'can-wait' | 'optional';
 
@@ -115,14 +115,6 @@ export interface Favorite {
   groupId: string;
   product: string;
   brand: string;
-  /** Editorial/test signal (primary), e.g. "Test winner 2026". */
-  editorialBadge?: string;
-  /** Source of the test assessment. */
-  testSource?: string;
-  /** Popularity 0–5 (secondary, clearly labelled as a user rating). */
-  rating?: number;
-  reviewCount?: number;
-  priceFrom?: number;
   why: string;
   /** Independent editorial selection — no payment affects placement. */
   demo: boolean;

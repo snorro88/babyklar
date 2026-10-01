@@ -47,6 +47,7 @@ export default function Onboarding() {
   const [focus, setFocus] = useState<FocusArea[]>(['equipment', 'clothes']);
 
   const born = situation === 'born';
+  const availableFocus = born ? FOCUS.filter((area) => area.id !== 'hospitalBag') : FOCUS;
   const weeks = born
     ? Math.max(0, Math.round(Math.abs(daysUntil(dueDate)) / 7))
     : weeksUntil(dueDate);
@@ -90,6 +91,7 @@ export default function Onboarding() {
   const chooseSituation = (next: Situation) => {
     const nextBorn = next === 'born';
     if (nextBorn !== born) setDueDate(dateFromDays(nextBorn ? -9 * 7 : 9 * 7));
+    if (nextBorn) setFocus((areas) => areas.filter((area) => area !== 'hospitalBag'));
     setSituation(next);
   };
 
@@ -201,7 +203,7 @@ export default function Onboarding() {
             <Text style={styles.h2}>Hva vil dere ha mest hjelp med?</Text>
             <Text style={styles.sub}>Velg gjerne flere.</Text>
             <View style={styles.chips}>
-              {FOCUS.map((f) => (
+              {availableFocus.map((f) => (
                 <Chip
                   key={f.id}
                   label={f.label}

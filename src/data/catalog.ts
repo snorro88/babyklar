@@ -13,6 +13,7 @@ export const CATEGORIES: {
   { id: 'transport', label: 'Transport', icon: 'baby-carriage', tint: '#DE8A63', softTint: '#FBEAE0' },
   { id: 'food', label: 'Mat', icon: 'cup-outline', tint: '#C08457', softTint: '#F7EBE0' },
   { id: 'hospitalBag', label: 'Sykehusbag', icon: 'bag-personal-outline', tint: '#B0688A', softTint: '#F7E8EE' },
+  { id: 'other', label: 'Annet', icon: 'dots-horizontal-circle-outline', tint: '#6E7B8A', softTint: '#EAEDF1' },
 ];
 
 export const categoryMeta = (id: CategoryId) => CATEGORIES.find((c) => c.id === id) ?? CATEGORIES[0];

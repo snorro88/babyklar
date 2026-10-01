@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FavoriteCard } from '@/components/FavoriteCard';
 import { Card, Note, ScreenHeader, SectionTitle } from '@/components/ui';
 import { favoriteSections } from '@/lib/favorites';
+import { PRICE_SOURCE } from '@/lib/prices';
 import { colors, spacing, type } from '@/theme';
 
 export default function Favorites() {
@@ -14,15 +15,18 @@ export default function Favorites() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScreenHeader title="Trygge favoritter" onBack={() => router.navigate('/')} />
+      <ScreenHeader
+        title="Trygge favoritter"
+        onBack={() => (router.canGoBack() ? router.back() : router.navigate('/'))}
+      />
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <Card style={{ gap: spacing(2), backgroundColor: colors.bgAlt, borderColor: colors.border }}>
           <Text style={type.bodyStrong}>Uavhengig utvalg</Text>
           <Text style={type.small}>
-            Dette er et redaksjonelt utvalg basert på test og erfaring – ikke betalte plasseringer.
-            For sikkerhetsutstyr veier vi test og godkjenning tyngst, og brukervurderinger kommer i
-            tillegg. I denne demoen er tallene eksempeldata.
+            Et redaksjonelt utvalg av kjente, lett tilgjengelige produkter – ikke betalte
+            plasseringer. Vi viser bevisst ingen stjerner eller påståtte testtall. Bruk «se etter»-
+            rådene under, og trykk et produkt for å se dagens priser hos {PRICE_SOURCE}.
           </Text>
         </Card>
 

@@ -2,13 +2,18 @@
   "expo": {
     "name": "BabyKlar",
     "slug": "babyklar",
+    "owner": "snorre.olimstad",
     "version": "0.1.0",
     "orientation": "portrait",
+    "icon": "./assets/icon.png",
     "scheme": "babyklar",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "no.babyklar.app"
+      "bundleIdentifier": "no.babyklar.app",
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "no.babyklar.app",
@@ -27,13 +32,22 @@
       [
         "expo-splash-screen",
         {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160,
           "backgroundColor": "#FBF7F3",
           "resizeMode": "contain"
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": false
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8f43970c-f852-43aa-bbf4-d7ca8cd08ff4"
+      }
     }
   }
 }

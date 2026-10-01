@@ -1,6 +1,8 @@
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
 
 import { notify } from '@/lib/dialog';
+import { colors } from '@/theme';
 
 /**
  * BabyKlar oppgir aldri en pris selv. Lenken åpner dagens reelle priser og
@@ -8,7 +10,7 @@ import { notify } from '@/lib/dialog';
  */
 export const PRICE_SOURCE = 'Prisjakt';
 
-const SEARCH_URL = 'https://www.prisjakt.no/search?search=';
+const SEARCH_URL = 'https://www.prisjakt.no/search?query=';
 
 /** Checklist names are written for parents, not for a price search. */
 const QUERIES: { match: RegExp; query: string }[] = [
@@ -62,17 +64,39 @@ export function priceCheckQuery(name: string): string {
   return QUERIES.find((q) => q.match.test(name))?.query ?? clean(name);
 }
 
+const searchUrl = (term: string) => `${SEARCH_URL}${encodeURIComponent(term)}`;
+
 export function priceCheckUrl(name: string): string {
-  return `${SEARCH_URL}${encodeURIComponent(priceCheckQuery(name))}`;
+  return searchUrl(priceCheckQuery(name));
 }
 
-export async function openPriceCheck(name: string): Promise<void> {
-  const url = priceCheckUrl(name);
+async function open(url: string, term: string): Promise<void> {
   try {
-    const ok = await Linking.canOpenURL(url);
-    if (!ok) throw new Error('unsupported');
-    await Linking.openURL(url);
+    // In-app browser (SafariViewController / Chrome Custom Tab) keeps the user in the
+    // app and brings its own share / open-in-browser controls. Web has no equivalent.
+    if (Platform.OS === 'web') {
+      await Linking.openURL(url);
+      return;
+    }
+    await WebBrowser.openBrowserAsync(url, {
+      toolbarColor: colors.surface,
+      controlsColor: colors.primary,
+      dismissButtonStyle: 'done',
+      presentationStyle: WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,
+    });
   } catch {
-    notify('Kunne ikke åpne lenken', `Søk etter «${priceCheckQuery(name)}» på ${PRICE_SOURCE}.`);
+    notify('Kunne ikke åpne lenken', `Søk etter «${term}» på ${PRICE_SOURCE}.`);
   }
+}
+
+/** Open Prisjakt for a checklist item, mapped to a good generic search term. */
+export function openPriceCheck(name: string): Promise<void> {
+  const term = priceCheckQuery(name);
+  return open(searchUrl(term), term);
+}
+
+/** Open Prisjakt for an exact product term (e.g. a curated favourite: brand + model). */
+export function openPriceSearch(term: string): Promise<void> {
+  const t = term.trim();
+  return open(searchUrl(t), t);
 }

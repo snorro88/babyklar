@@ -42,9 +42,9 @@ export default function Home() {
 
   const categoryScores = useMemo(
     () =>
-      CATEGORIES.map((c) => ({ ...c, score: categoryReadiness(items, c.id) })).sort(
-        (a, b) => a.score - b.score,
-      ),
+      CATEGORIES.filter((c) => items.some((i) => i.category === c.id))
+        .map((c) => ({ ...c, score: categoryReadiness(items, c.id) }))
+        .sort((a, b) => a.score - b.score),
     [items],
   );
 
@@ -116,7 +116,7 @@ export default function Home() {
 
         <SectionTitle>Dere mangler mest innen</SectionTitle>
         <Card style={{ gap: spacing(4) }}>
-          {categoryScores.slice(0, 4).map((c) => (
+          {categoryScores.map((c) => (
             <Pressable key={c.id} onPress={() => router.push({ pathname: '/items', params: { category: c.id } })}>
               <View style={styles.catRow}>
                 <View style={[styles.catIcon, { backgroundColor: c.softTint }]}>

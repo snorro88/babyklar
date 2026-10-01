@@ -86,7 +86,7 @@ type Action =
 
 const asArray = <T,>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 
-const CATEGORY_IDS: CategoryId[] = ['sleep', 'clothes', 'care', 'transport', 'food', 'hospitalBag'];
+const CATEGORY_IDS: CategoryId[] = ['sleep', 'clothes', 'care', 'transport', 'food', 'hospitalBag', 'other'];
 const PRIORITIES: Priority[] = ['important', 'can-wait', 'optional'];
 const STATUSES: Status[] = ['have', 'missing', 'want', 'to-buy', 'ordered', 'not-needed', 'stored', 'outgrown'];
 const SITUATIONS: Situation[] = ['first', 'has-child', 'born'];

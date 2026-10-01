@@ -6,17 +6,10 @@ export interface FavoriteSection {
   items: Favorite[];
 }
 
-/** Sort within a group: editorial/test signal first, then highest user rating. */
-const sortFavorites = (a: Favorite, b: Favorite) => {
-  const badge = Number(!!b.editorialBadge) - Number(!!a.editorialBadge);
-  if (badge !== 0) return badge;
-  return (b.rating ?? 0) - (a.rating ?? 0);
-};
-
 export function favoriteSections(): FavoriteSection[] {
   return FAVORITE_GROUPS.map((group) => ({
     group,
-    items: FAVORITES.filter((f) => f.groupId === group.id).sort(sortFavorites),
+    items: FAVORITES.filter((f) => f.groupId === group.id),
   })).filter((s) => s.items.length > 0);
 }
 
@@ -32,5 +25,5 @@ export function favoriteGroupForItem(item: Item): FavoriteGroup | undefined {
 export function favoritesForItem(item: Item): Favorite[] {
   const group = favoriteGroupForItem(item);
   if (!group) return [];
-  return FAVORITES.filter((f) => f.groupId === group.id).sort(sortFavorites);
+  return FAVORITES.filter((f) => f.groupId === group.id);
 }

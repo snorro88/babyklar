@@ -206,7 +206,7 @@ export default function ItemDetail() {
           <>
             <SectionTitle>Trygge favoritter</SectionTitle>
             <Text style={[type.small, { marginBottom: spacing(3) }]}>
-              Uavhengig utvalg basert på test og erfaring – ikke betalte plasseringer.
+              Uavhengig utvalg av kjente produkter – ikke betalte plasseringer.
             </Text>
             <View style={{ gap: spacing(3) }}>
               {favorites.map((f) => (

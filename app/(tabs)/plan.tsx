@@ -96,7 +96,7 @@ export default function Plan() {
         <Text style={[type.small, { marginTop: spacing(3) }]}>{filterSummary}</Text>
 
         <View style={{ gap: spacing(3), marginTop: spacing(4) }}>
-          {CATEGORIES.map((c) => {
+          {CATEGORIES.filter((c) => state.items.some((i) => i.category === c.id)).map((c) => {
             const all = state.items.filter((i) => i.category === c.id);
             const visible = all.filter((i) => filter === 'all' || i.priority === filter);
             const remaining = visible.filter((i) => !isDone(i));
