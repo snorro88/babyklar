@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "BabyKlar",
+    "slug": "babyklar",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "babyklar",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "no.babyklar.app"
+    },
+    "android": {
+      "package": "no.babyklar.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#FBF7F3"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-asset",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FBF7F3",
+          "resizeMode": "contain"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
