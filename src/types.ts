@@ -2,15 +2,7 @@ export type CategoryId = 'sleep' | 'clothes' | 'care' | 'transport' | 'food' | '
 
 export type Priority = 'important' | 'can-wait' | 'optional';
 
-export type Status =
-  | 'have'
-  | 'missing'
-  | 'want'
-  | 'to-buy'
-  | 'ordered'
-  | 'not-needed'
-  | 'stored'
-  | 'outgrown';
+export type Status = 'have' | 'missing' | 'want' | 'not-needed';
 
 export type Situation = 'first' | 'has-child' | 'born';
 
@@ -65,6 +57,22 @@ export interface WishItem {
   usedOk: boolean;
   reservedBy?: string;
   bought?: boolean;
+}
+
+/** One kind of thing the photo scan recognised. */
+export interface ScanSuggestion {
+  name: string;
+  category: CategoryId;
+  size?: string;
+  quantity: number;
+  /** Item on the family's list the AI thinks this is (not used for clothes). */
+  matchId?: string;
+}
+
+export interface ScanResult {
+  /** What the photo shows, with an indefinite article, e.g. «en bunke med klær». */
+  label: string;
+  items: ScanSuggestion[];
 }
 
 export interface GarmentRow {

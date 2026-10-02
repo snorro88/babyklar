@@ -2,7 +2,7 @@ import { DONE_STATUSES, GARMENT_TEMPLATE } from '@/data/catalog';
 import type { AppState, CategoryId, GarmentRow, Item, Task } from '@/types';
 
 /** Item name → wardrobe "type", e.g. "Body str. 56" → "body". */
-const garmentType = (name: string) => name.replace(/\s*str\.?\s*\d+\s*$/i, '').trim().toLowerCase();
+export const garmentType = (name: string) => name.replace(/\s*str\.?\s*\d+\s*$/i, '').trim().toLowerCase();
 
 /**
  * Derives the garment rows for one size from the items the user has actually
@@ -43,7 +43,7 @@ const WEIGHT: Record<Item['priority'], number> = {
 };
 
 export const isDone = (item: Item) => DONE_STATUSES.includes(item.status);
-export const isCounted = (item: Item) => item.status !== 'not-needed' && item.status !== 'outgrown';
+export const isCounted = (item: Item) => item.status !== 'not-needed';
 
 export function readiness(items: Item[]): number {
   const counted = items.filter(isCounted);
@@ -62,6 +62,13 @@ export function daysUntil(iso: string): number {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return Math.round((target.getTime() - today.getTime()) / 86_400_000);
+}
+
+/** Today plus `days`, as a local YYYY-MM-DD date. */
+export function dateFromDays(days: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 export function weeksUntil(iso: string): number {

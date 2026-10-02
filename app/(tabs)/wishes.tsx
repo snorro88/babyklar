@@ -17,7 +17,7 @@ const PRIORITIES: { id: WishItem['priority']; label: string; tint: string; soft:
 ];
 
 /** Grunner til å fjerne noe fra ønskelista – uten «al Ønsker», som ville lagt tingen tilbake. */
-const REMOVE_REASONS: Status[] = ['have', 'missing', 'to-buy', 'ordered', 'not-needed'];
+const REMOVE_REASONS: Status[] = ['have', 'missing', 'not-needed'];
 
 const SHARE_URL = 'https://babyklar.no/o/demo-4f2a';
 

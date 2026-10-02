@@ -6,7 +6,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CalendarDateField } from '@/components/CalendarDateField';
 import { Button, Card, Chip, Switch } from '@/components/ui';
-import { daysUntil, formatDate, weeksUntil } from '@/lib/insights';
+import { FEATURES } from '@/lib/features';
+import { dateFromDays, daysUntil, formatDate, weeksUntil } from '@/lib/insights';
 import { reusesGear } from '@/lib/plan';
 import { useApp } from '@/state/store';
 import { colors, radius, spacing, type } from '@/theme';
@@ -28,12 +29,6 @@ const FOCUS: { id: FocusArea; label: string; icon: string }[] = [
   { id: 'budget', label: 'Budsjett', icon: 'wallet-outline' },
 ];
 
-const dateFromDays = (days: number) => {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-};
-
 export default function Onboarding() {
   const router = useRouter();
   const { dispatch } = useApp();
@@ -47,7 +42,9 @@ export default function Onboarding() {
   const [focus, setFocus] = useState<FocusArea[]>(['equipment', 'clothes']);
 
   const born = situation === 'born';
-  const availableFocus = born ? FOCUS.filter((area) => area.id !== 'hospitalBag') : FOCUS;
+  const availableFocus = FOCUS.filter(
+    (area) => !(born && area.id === 'hospitalBag') && (FEATURES.budget || area.id !== 'budget'),
+  );
   const weeks = born
     ? Math.max(0, Math.round(Math.abs(daysUntil(dueDate)) / 7))
     : weeksUntil(dueDate);

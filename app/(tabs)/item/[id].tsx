@@ -9,22 +9,14 @@ import { FavoriteCard } from '@/components/FavoriteCard';
 import { PRIORITY_LABEL, STATUS_LABEL, categoryMeta } from '@/data/catalog';
 import { confirm, notify } from '@/lib/dialog';
 import { favoriteGroupForItem, favoritesForItem } from '@/lib/favorites';
+import { FEATURES } from '@/lib/features';
 import { isItemOpen } from '@/lib/offers';
 import { PRICE_SOURCE, openPriceCheck } from '@/lib/prices';
 import { useApp } from '@/state/store';
 import { colors, radius, spacing, type } from '@/theme';
 import type { Item, Status } from '@/types';
 
-const STATUSES: Status[] = [
-  'have',
-  'missing',
-  'to-buy',
-  'ordered',
-  'want',
-  'stored',
-  'not-needed',
-  'outgrown',
-];
+const STATUSES: Status[] = ['have', 'missing', 'want', 'not-needed'];
 
 const ORIGIN_LABEL: Record<NonNullable<Item['origin']>, string> = {
   bought: 'Kjøpt',
@@ -56,7 +48,7 @@ export default function ItemDetail() {
 
   const meta = categoryMeta(item.category);
   const patch = (p: Partial<Item>) => dispatch({ type: 'updateItem', id: item.id, patch: p });
-  const favoriteGroup = favoriteGroupForItem(item);
+  const favoriteGroup = FEATURES.favorites ? favoriteGroupForItem(item) : undefined;
   const favorites = favoriteGroup ? favoritesForItem(item).slice(0, 3) : [];
 
   const inWishlist = state.wishes.some(
@@ -167,16 +159,18 @@ export default function ItemDetail() {
             placeholder="Valgfritt"
             onChange={(v) => patch({ brand: v || undefined })}
           />
-          <Field
-            label="Pris per stk (kr)"
-            value={item.price != null ? String(item.price) : ''}
-            placeholder="Anslag"
-            keyboardType="numeric"
-            onChange={(v) => {
-              const n = Number(v.replace(/[^\d]/g, ''));
-              patch({ price: v.trim() && n > 0 ? n : undefined });
-            }}
-          />
+          {FEATURES.budget ? (
+            <Field
+              label="Pris per stk (kr)"
+              value={item.price != null ? String(item.price) : ''}
+              placeholder="Anslag"
+              keyboardType="numeric"
+              onChange={(v) => {
+                const n = Number(v.replace(/[^\d]/g, ''));
+                patch({ price: v.trim() && n > 0 ? n : undefined });
+              }}
+            />
+          ) : null}
           <Field
             label="Hvor ligger den?"
             value={item.place ?? ''}
@@ -192,7 +186,7 @@ export default function ItemDetail() {
           />
         </Card>
 
-        {isItemOpen(item) ? (
+        {FEATURES.priceCheck && isItemOpen(item) ? (
           <Button
             label={`Sjekk dagens pris hos ${PRICE_SOURCE}`}
             variant="soft"

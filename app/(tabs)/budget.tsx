@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Bar, Card, Note, Pill, ScreenHeader, SectionTitle } from '@/components/ui';
 import { PRIORITY_LABEL, categoryMeta } from '@/data/catalog';
+import { FEATURES } from '@/lib/features';
 import { isCounted, isDone } from '@/lib/insights';
 import { priceCheckCount } from '@/lib/offers';
 import { useApp } from '@/state/store';
@@ -122,7 +123,7 @@ export default function Budget() {
           </Note>
         ) : null}
 
-        {offerCount > 0 ? (
+        {FEATURES.priceCheck && offerCount > 0 ? (
           <Pressable onPress={() => router.push('/offers')} style={styles.offerLink}>
             <View style={[styles.icon, { backgroundColor: colors.primarySoft }]}>
               <MaterialCommunityIcons name="tag-search-outline" size={16} color={colors.primaryDark} />
@@ -138,8 +139,9 @@ export default function Budget() {
         ) : null}
 
         <Text style={styles.footnote}>
-          Prisene er anslag dere kan endre selv. «Sammenlign priser» går til Prisjakt, og BabyKlar
-          tjener ingenting på det i denne demoen.
+          {FEATURES.priceCheck
+            ? 'Prisene er anslag dere kan endre selv. «Sammenlign priser» går til Prisjakt, og BabyKlar tjener ingenting på det i denne demoen.'
+            : 'Prisene er anslag dere kan endre selv.'}
         </Text>
       </ScrollView>
     </SafeAreaView>

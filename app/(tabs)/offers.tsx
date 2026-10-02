@@ -6,6 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Card, Chip, Empty, ScreenHeader, SectionTitle } from '@/components/ui';
 import { CATEGORIES, categoryMeta } from '@/data/catalog';
+import { FEATURES } from '@/lib/features';
 import { priceCheckItems } from '@/lib/offers';
 import { PRICE_SOURCE, openPriceCheck } from '@/lib/prices';
 import { useApp } from '@/state/store';
@@ -64,14 +65,16 @@ export default function Offers() {
           </Text>
         </Card>
 
-        <Pressable onPress={() => router.push('/favorites')} style={styles.favLink}>
-          <MaterialCommunityIcons name="star-check-outline" size={18} color={colors.primaryDark} />
-          <View style={{ flex: 1 }}>
-            <Text style={type.bodyStrong}>Usikker på hva du skal velge?</Text>
-            <Text style={type.small}>Se trygge favoritter for bilstol, vogn og bæresele.</Text>
-          </View>
-          <MaterialCommunityIcons name="chevron-right" size={20} color={colors.inkSoft} />
-        </Pressable>
+        {FEATURES.favorites ? (
+          <Pressable onPress={() => router.push('/favorites')} style={styles.favLink}>
+            <MaterialCommunityIcons name="star-check-outline" size={18} color={colors.primaryDark} />
+            <View style={{ flex: 1 }}>
+              <Text style={type.bodyStrong}>Usikker på hva du skal velge?</Text>
+              <Text style={type.small}>Se trygge favoritter for bilstol, vogn og bæresele.</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={20} color={colors.inkSoft} />
+          </Pressable>
+        ) : null}
 
         {open.length ? (
           <View style={styles.filters}>

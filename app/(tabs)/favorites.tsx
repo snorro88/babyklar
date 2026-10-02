@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { FavoriteCard } from '@/components/FavoriteCard';
 import { Card, Note, ScreenHeader, SectionTitle } from '@/components/ui';
 import { favoriteSections } from '@/lib/favorites';
+import { FEATURES } from '@/lib/features';
 import { PRICE_SOURCE } from '@/lib/prices';
 import { colors, spacing, type } from '@/theme';
 
@@ -48,10 +49,12 @@ export default function Favorites() {
           </View>
         ))}
 
-        <Pressable onPress={() => router.push('/offers')} style={styles.offerLink}>
-          <Text style={type.bodyStrong}>Klar til å kjøpe?</Text>
-          <Text style={type.small}>Sammenlign dagens priser på tingene dere mangler.</Text>
-        </Pressable>
+        {FEATURES.priceCheck ? (
+          <Pressable onPress={() => router.push('/offers')} style={styles.offerLink}>
+            <Text style={type.bodyStrong}>Klar til å kjøpe?</Text>
+            <Text style={type.small}>Sammenlign dagens priser på tingene dere mangler.</Text>
+          </Pressable>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );

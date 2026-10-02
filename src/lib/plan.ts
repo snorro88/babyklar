@@ -1,3 +1,4 @@
+import { CATALOG } from '@/data/catalog';
 import type { CategoryId, FocusArea, Household, Item, Task } from '@/types';
 
 export type Season = 'vinter' | 'var' | 'sommer' | 'host';
@@ -22,9 +23,20 @@ export function reusesGear(h: Pick<Household, 'situation' | 'hasHandMeDowns'>): 
   return h.hasHandMeDowns || h.situation === 'has-child';
 }
 
+// The `why` text doubles as a marker, so an adjustment can be undone when an answer changes.
+const NO_CAR_WHY = 'Uten egen bil kan bilstol lånes eller leies til hjemreisen.';
+const REUSE_WHY = 'Sjekk arvede plagg og boden før dere kjøper nytt.';
+
+/** The seeded priority and explanation for an item, falling back to "important". */
+const seeded = (it: Item): Pick<Item, 'priority' | 'why'> => {
+  const base = CATALOG.find((c) => c.name === it.name);
+  return { priority: base?.priority ?? 'important', why: base?.why };
+};
+
 /**
- * Adapts the seeded list to the onboarding answers. Idempotent: runs once when
- * onboarding completes, but produces the same result if run again.
+ * Adapts the seeded list to the household answers. Runs when onboarding completes
+ * and again whenever the answers are edited, so it is idempotent and undoes its
+ * own adjustments when an answer flips back. Items the user added are left alone.
  */
 export function personalizeItems(
   items: Item[],
@@ -32,20 +44,25 @@ export function personalizeItems(
 ): Item[] {
   const reuse = reusesGear(h);
   return items.map((it) => {
+    if (it.custom) return it;
     if (!h.hasCar && it.category === 'transport' && /bilstol/i.test(it.name) && it.priority === 'important') {
-      return { ...it, priority: 'can-wait', why: 'Uten egen bil kan bilstol lånes eller leies til hjemreisen.' };
+      return { ...it, priority: 'can-wait', why: NO_CAR_WHY };
     }
+    if (h.hasCar && it.why === NO_CAR_WHY) return { ...it, ...seeded(it) };
     if (reuse && it.category === 'clothes' && it.status === 'missing' && it.priority === 'important') {
-      return { ...it, priority: 'can-wait', why: 'Sjekk arvede plagg og boden før dere kjøper nytt.' };
+      return { ...it, priority: 'can-wait', why: REUSE_WHY };
     }
+    if (!reuse && it.why === REUSE_WHY) return { ...it, ...seeded(it) };
     return it;
   });
 }
 
+export const isCarSeatTask = (t: Pick<Task, 'title'>) => /bilstol/i.test(t.title);
+
 /** Without a car, "Get a car seat" is rarely an urgent task. */
 export function personalizeTasks(tasks: Task[], h: Pick<Household, 'hasCar'>): Task[] {
   if (h.hasCar) return tasks;
-  return tasks.filter((t) => !/bilstol/i.test(t.title));
+  return tasks.filter((t) => !isCarSeatTask(t));
 }
 
 const FOCUS_CATEGORY: Partial<Record<FocusArea, CategoryId>> = {

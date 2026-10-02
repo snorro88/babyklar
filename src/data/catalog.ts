@@ -1,4 +1,4 @@
-import type { BagSectionId, CategoryId, GarmentRow, Item, Priority, Status, Task, WishItem } from '@/types';
+import type { BagSectionId, CategoryId, GarmentRow, Item, Priority, ScanResult, Status, Task, WishItem } from '@/types';
 
 export const CATEGORIES: {
   id: CategoryId;
@@ -28,15 +28,11 @@ export const STATUS_LABEL: Record<Status, string> = {
   have: 'Har',
   missing: 'Mangler',
   want: 'Ønsker',
-  'to-buy': 'Skal kjøpe',
-  ordered: 'Bestilt',
   'not-needed': 'Trenger ikke',
-  stored: 'Lagret',
-  outgrown: 'Vokst ut av',
 };
 
 /** Statuses that count as "in the bag" toward progress. */
-export const DONE_STATUSES: Status[] = ['have', 'ordered', 'stored'];
+export const DONE_STATUSES: Status[] = ['have'];
 
 export const BAG_SECTIONS: { id: BagSectionId; label: string; icon: string }[] = [
   { id: 'mother', label: 'Til mor', icon: 'human-female' },
@@ -175,10 +171,10 @@ export const GARMENT_TEMPLATE: GarmentRow[] = [
   { type: 'Sokker', have: 0, min: 4, max: 8 },
 ];
 
-/** Simulated AI matches for the demo. */
-export const AI_SUGGESTIONS: { label: string; items: { name: string; category: CategoryId; size?: string; quantity: number }[] }[] = [
+/** Example scan results, shown when AI scanning isn't set up (no API key or server). */
+export const AI_SUGGESTIONS: ScanResult[] = [
   {
-    label: 'Bunke med klær',
+    label: 'en bunke med klær',
     items: [
       { name: 'Body', category: 'clothes', size: '56', quantity: 4 },
       { name: 'Bukse', category: 'clothes', size: '56', quantity: 2 },
@@ -186,11 +182,11 @@ export const AI_SUGGESTIONS: { label: string; items: { name: string; category: C
     ],
   },
   {
-    label: 'Produkteske',
+    label: 'en produkteske',
     items: [{ name: 'Bilstol gr. 0+', category: 'transport', quantity: 1 }],
   },
   {
-    label: 'Boks fra boden',
+    label: 'en boks fra boden',
     items: [
       { name: 'Pysj', category: 'clothes', size: '62', quantity: 3 },
       { name: 'Sovepose 0–6 mnd', category: 'sleep', quantity: 1 },

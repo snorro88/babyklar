@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Bar, Card, Chip, Empty, Note, SectionTitle } from '@/components/ui';
 import { SIZES } from '@/data/catalog';
+import { FEATURES } from '@/lib/features';
 import { daysUntil, garmentRowsForSize, nextSize, seasonHint, wardrobeInsights } from '@/lib/insights';
 import { useApp } from '@/state/store';
 import { colors, spacing, type } from '@/theme';
@@ -109,7 +110,7 @@ export default function Wardrobe() {
           </>
         ) : null}
 
-        {next ? (
+        {next && FEATURES.sizes ? (
           <>
             <SectionTitle>Neste størrelse</SectionTitle>
             <Card style={{ gap: spacing(3) }}>

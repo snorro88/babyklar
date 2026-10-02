@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Card, Note, ScreenHeader, SectionTitle } from '@/components/ui';
 import { STATUS_LABEL } from '@/data/catalog';
+import { FEATURES } from '@/lib/features';
 import { colors, radius, spacing, type } from '@/theme';
 import type { Status } from '@/types';
 
@@ -13,7 +14,7 @@ const FIRST_TIME: { title: string; body: string; icon: string }[] = [
   {
     icon: 'calendar-heart',
     title: 'Svar på de fem spørsmålene',
-    body: 'Termin eller fødselsdato, om dere har bil, arvede ting og hva dere vil ha hjelp med. Det tar under ett minutt, og planen tilpasses svarene.',
+    body: 'Termin eller fødselsdato, om dere har bil, arvede ting og hva dere vil ha hjelp med. Det tar under ett minutt, og planen tilpasses svarene. Alt kan endres senere under Baby.',
   },
   {
     icon: 'package-variant-closed',
@@ -23,12 +24,12 @@ const FIRST_TIME: { title: string; body: string; icon: string }[] = [
   {
     icon: 'line-scan',
     title: 'Eller skann en bunke',
-    body: 'Har dere fått en pose med klær? Trykk på den runde skanneknappen midt i menyen, ta bilde, og godkjenn forslagene før de legges inn.',
+    body: 'Har dere fått en pose med klær eller en eske? Trykk på den runde skanneknappen midt i menyen og ta bilde. Sjekk forslagene før de lagres — ting dere manglet krysses av automatisk.',
   },
   {
     icon: 'home-variant-outline',
     title: 'Sjekk Hjem',
-    body: 'Nå viser Hjem hvor klare dere er, hva som er viktigst nå, og hvilke kategorier dere mangler mest i. Prosenten er bare et hjelpemiddel — den skal ikke stresse dere.',
+    body: 'Nå viser Hjem hvor klare dere er, hva som er viktigst nå, og hvor mange ting som mangler i hver kategori. Prosenten er bare et hjelpemiddel — den skal ikke stresse dere.',
   },
   {
     icon: 'gift-outline',
@@ -37,7 +38,7 @@ const FIRST_TIME: { title: string; body: string; icon: string }[] = [
   },
 ];
 
-const EVERY_DAY: { title: string; body: string; icon: string }[] = [
+const EVERY_DAY: { title: string; body: string; icon: string; on?: boolean }[] = [
   {
     icon: 'clipboard-check-outline',
     title: 'Plan',
@@ -50,8 +51,10 @@ const EVERY_DAY: { title: string; body: string; icon: string }[] = [
   },
   {
     icon: 'tshirt-crew-outline',
-    title: 'Garderobe og størrelser',
-    body: 'Garderoben teller klærne dere har registrert og sier fra hvis dere mangler noe i den størrelsen barnet bruker nå — og hva som trengs i neste.',
+    title: FEATURES.sizes ? 'Garderobe og størrelser' : 'Garderobe',
+    body: FEATURES.sizes
+      ? 'Garderoben teller klærne dere har registrert og sier fra hvis dere mangler noe i den størrelsen barnet bruker nå — og hva som trengs i neste.'
+      : 'Garderoben teller klærne dere har registrert i hver størrelse og sier fra hvis dere mangler noe.',
   },
   {
     icon: 'bag-personal-outline',
@@ -62,18 +65,15 @@ const EVERY_DAY: { title: string; body: string; icon: string }[] = [
     icon: 'wallet-outline',
     title: 'Budsjett',
     body: 'Hver ting kan ha en anslått pris. Budsjettet viser hva dere har brukt og hva som gjenstår, slik at store kjøp kan planlegges.',
+    on: FEATURES.budget,
   },
-];
+].filter((s) => s.on !== false);
 
 const STATUS_HELP: { status: Status; body: string }[] = [
-  { status: 'have', body: 'Dere har den hjemme. Teller som klar.' },
+  { status: 'have', body: 'Dere har den, også om den ligger i boden. Teller som klar.' },
   { status: 'missing', body: 'Mangler fortsatt. Havner i planen.' },
   { status: 'want', body: 'Legges automatisk på ønskelista.' },
-  { status: 'to-buy', body: 'Dere skal kjøpe den selv.' },
-  { status: 'ordered', body: 'Bestilt og på vei. Teller som klar.' },
   { status: 'not-needed', body: 'Dere dropper den bevisst. Trekkes helt ut av regnestykket.' },
-  { status: 'stored', body: 'Ligger i boden eller hos noen andre.' },
-  { status: 'outgrown', body: 'Barnet har vokst ut av den.' },
 ];
 
 export default function Help() {
@@ -147,10 +147,12 @@ export default function Help() {
           <Text style={type.body}>
             · Chevron-knappen øverst til venstre tar dere alltid tilbake til Hjem.
           </Text>
-          <Text style={type.body}>
-            · «Sammenlign priser» går rett til Prisjakt. Vi oppgir ingen pris selv, så det dere ser er
-            alltid dagens — og vi tjener ingenting på lenkene.
-          </Text>
+          {FEATURES.priceCheck ? (
+            <Text style={type.body}>
+              · «Sammenlign priser» går rett til Prisjakt. Vi oppgir ingen pris selv, så det dere ser er
+              alltid dagens — og vi tjener ingenting på lenkene.
+            </Text>
+          ) : null}
           <Text style={type.body}>
             · Alt ligger kun på denne enheten. Ta en sikkerhetskopi under Baby → Avansert før dere
             bytter telefon.

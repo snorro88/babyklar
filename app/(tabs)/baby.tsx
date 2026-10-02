@@ -4,12 +4,20 @@ import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CalendarDateField } from '@/components/CalendarDateField';
 import { Button, Card, Chip, Note, Pill, SectionTitle, Switch } from '@/components/ui';
 import { SIZES } from '@/data/catalog';
 import { confirm } from '@/lib/dialog';
-import { daysUntil, formatDate, summary, weeksUntil } from '@/lib/insights';
+import { dateFromDays, daysUntil, formatDate, summary, weeksUntil } from '@/lib/insights';
 import { useApp } from '@/state/store';
 import { colors, radius, spacing, type } from '@/theme';
+import type { Household, Situation } from '@/types';
+
+const SITUATIONS: { id: Situation; label: string }[] = [
+  { id: 'first', label: 'Første barn' },
+  { id: 'has-child', label: 'Har barn fra før' },
+  { id: 'born', label: 'Babyen er født' },
+];
 
 export default function Baby() {
   const router = useRouter();
@@ -22,6 +30,17 @@ export default function Baby() {
   const showDemoPanel = versionTaps >= 5;
   const result = summary(state);
   const unborn = daysUntil(household.dueDate) > 0;
+  const born = household.situation === 'born';
+
+  const setFamily = (patch: Partial<Household>) => dispatch({ type: 'setHousehold', patch });
+
+  const chooseSituation = (situation: Situation) => {
+    const patch: Partial<Household> = { situation };
+    // Keep the date when it still fits; otherwise move it to the right side of today.
+    if (situation === 'born' && unborn) patch.dueDate = dateFromDays(0);
+    if (situation !== 'born' && daysUntil(household.dueDate) < 0) patch.dueDate = dateFromDays(9 * 7);
+    setFamily(patch);
+  };
 
   const confirmReset = async () => {
     const ok = await confirm(
@@ -63,7 +82,7 @@ export default function Baby() {
           </View>
           <Text style={type.title}>{name.trim() || 'Babyen'}</Text>
           <Text style={type.small}>
-            {household.situation === 'born'
+            {born
               ? `Født ${formatDate(household.dueDate)}`
               : `Termin ${formatDate(household.dueDate)} · ${weeksUntil(household.dueDate)} uker igjen`}
           </Text>
@@ -90,6 +109,28 @@ export default function Baby() {
           </Text>
         </Card>
 
+        <SectionTitle>Situasjon</SectionTitle>
+        <View style={styles.wrap}>
+          {SITUATIONS.map((s) => (
+            <Chip
+              key={s.id}
+              label={s.label}
+              selected={household.situation === s.id}
+              onPress={() => chooseSituation(s.id)}
+            />
+          ))}
+        </View>
+
+        <SectionTitle>{born ? 'Fødselsdato' : 'Termin'}</SectionTitle>
+        <Card>
+          <CalendarDateField
+            value={household.dueDate}
+            onChange={(dueDate) => dueDate && setFamily({ dueDate })}
+            minimumDate={born ? dateFromDays(-3 * 365) : dateFromDays(0)}
+            maximumDate={born ? dateFromDays(0) : dateFromDays(42 * 7)}
+          />
+        </Card>
+
         <SectionTitle>{unborn ? 'Størrelse å starte i' : 'Størrelse nå'}</SectionTitle>
         <View style={styles.wrap}>
           {SIZES.map((s) => (
@@ -104,8 +145,27 @@ export default function Baby() {
 
         <SectionTitle>Familie</SectionTitle>
         <Card style={{ gap: spacing(4) }}>
-          <Row icon="account-multiple-outline" title="Partner" value={household.sharesWithPartner ? 'Delt husholdning' : 'Ikke delt'} />
-          <Row icon="car-outline" title="Bil" value={household.hasCar ? 'Ja – bilstol er med i planen' : 'Nei'} />
+          <ToggleRow
+            icon="car-outline"
+            title="Bil"
+            hint={household.hasCar ? 'Bilstol står som viktig før hjemreise' : 'Bilstol kan vente – den kan lånes til hjemreisen'}
+            value={household.hasCar}
+            onChange={(hasCar) => setFamily({ hasCar })}
+          />
+          <ToggleRow
+            icon="archive-outline"
+            title="Ting fra tidligere barn"
+            hint="Arvet utstyr og klær"
+            value={household.hasHandMeDowns}
+            onChange={(hasHandMeDowns) => setFamily({ hasHandMeDowns })}
+          />
+          <ToggleRow
+            icon="account-multiple-outline"
+            title="Partner å dele med"
+            hint="Samme plan, samme oversikt"
+            value={household.sharesWithPartner}
+            onChange={(sharesWithPartner) => setFamily({ sharesWithPartner })}
+          />
           {household.sharesWithPartner ? (
             <Note tone="ok">
               Partnerdeling er valgt for denne demoen. Ekte synk mellom to enheter kommer senere.
@@ -133,12 +193,6 @@ export default function Baby() {
               </View>
               <MaterialCommunityIcons name="chevron-right" size={20} color={colors.inkSoft} />
             </Pressable>
-            <View style={styles.divider} />
-            <Row
-              icon="archive-outline"
-              title="Arvede ting fra tidligere"
-              value={household.hasHandMeDowns ? 'Ja' : 'Nei'}
-            />
           </Card>
         ) : null}
 
@@ -199,17 +253,30 @@ export default function Baby() {
   );
 }
 
-function Row({ icon, title, value }: { icon: string; title: string; value: string }) {
+function ToggleRow({
+  icon,
+  title,
+  hint,
+  value,
+  onChange,
+}: {
+  icon: string;
+  title: string;
+  hint: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
+}) {
   return (
-    <View style={styles.row}>
+    <Pressable onPress={() => onChange(!value)} style={styles.row}>
       <View style={styles.rowIcon}>
         <MaterialCommunityIcons name={icon as any} size={18} color={colors.primary} />
       </View>
       <View style={{ flex: 1 }}>
         <Text style={type.bodyStrong}>{title}</Text>
-        <Text style={type.small}>{value}</Text>
+        <Text style={type.small}>{hint}</Text>
       </View>
-    </View>
+      <Switch value={value} onChange={onChange} accessibilityLabel={title} />
+    </Pressable>
   );
 }
 
@@ -289,9 +356,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primarySoft,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: colors.border,
   },
 });

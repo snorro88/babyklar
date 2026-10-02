@@ -17,29 +17,25 @@ Appen skal hjelpe dere å kjøpe smartere — ikke mer. «Trenger ikke» er et l
 ## Første gang · ca. 15 minutter
 
 **1. Svar på de fem spørsmålene**
-Termin eller fødselsdato, om dere har bil, om dere har arvede ting, og hva dere vil ha mest hjelp med. Det tar under ett minutt. Planen tilpasses svarene — har dere for eksempel ikke bil, flyttes bilstol lenger ned på lista.
+Termin eller fødselsdato, om dere har bil, om dere har arvede ting, og hva dere vil ha mest hjelp med. Det tar under ett minutt. Planen tilpasses svarene — har dere for eksempel ikke bil, flyttes bilstol lenger ned på lista. Alt kan endres senere under **Baby**.
 
 **2. Gå gjennom «Ting» én gang**
 Under fanen **Ting** ligger alt et nyfødt barn vanligvis trenger. Trykk på en ting og sett status:
 
 | Status | Betyr |
 | --- | --- |
-| Har | Dere har den hjemme. Teller som klar. |
+| Har | Dere har den, også om den ligger i boden. Teller som klar. |
 | Mangler | Mangler fortsatt. Havner i planen. |
 | Ønsker | Legges automatisk på ønskelista. |
-| Skal kjøpe | Dere kjøper den selv. |
-| Bestilt | På vei. Teller som klar. |
 | Trenger ikke | Dere dropper den bevisst. Trekkes helt ut av regnestykket. |
-| Lagret | Ligger i boden eller hos noen andre. |
-| Vokst ut av | Barnet har vokst ut av den. |
 
 Bruk 10–15 minutter på de viktigste. Resten kan vente.
 
 **3. Eller skann en bunke**
-Har dere fått en pose med klær? Trykk på den runde skanneknappen midt i menyen, ta bilde, og godkjenn forslagene før de legges inn. Ingenting lagres uten at dere sier ja.
+Har dere fått en pose med klær eller en eske? Trykk på den runde skanneknappen midt i menyen og ta bilde (eller velg et bilde dere har). Sjekk forslagene, juster antall og størrelse, og lagre. Ting dere manglet krysses av automatisk, og ingenting lagres uten at dere sier ja.
 
 **4. Sjekk Hjem**
-Nå viser **Hjem** hvor klare dere er, hva som er viktigst nå, og hvilke kategorier dere mangler mest i. Prosenten er bare et hjelpemiddel — den skal ikke stresse dere.
+Nå viser **Hjem** hvor klare dere er, hva som er viktigst nå, og hvor mange ting som mangler i hver kategori. Prosenten er bare et hjelpemiddel — den skal ikke stresse dere.
 
 **5. Del ønskelista**
 Alt dere setter til «Ønsker» havner automatisk under **Ønsker**. Del lenken med familien — de kan reservere en gave uten å laste ned noe, så dere slipper tre bæreseler.
@@ -52,16 +48,12 @@ Alt dere setter til «Ønsker» havner automatisk under **Ønsker**. Del lenken 
 
 - **Plan** — huk av oppgaver etter hvert. Lista sorteres etter hvor nær termin dere er, så det som haster ligger øverst.
 - **Legg til** — får dere noe i gave eller kjøper noe, legg det inn med «Legg til», eller bare endre status fra Mangler til Har.
-- **Garderobe og størrelser** — teller klærne dere har registrert, og sier fra hvis dere mangler noe i størrelsen barnet bruker nå, og hva som trengs i neste.
+- **Garderobe** — teller klærne dere har registrert i hver størrelse, og sier fra hvis dere mangler noe.
 - **Sykehusbag** — fra uke 34 er det lurt å starte. Pakkemodus gir én ting av gangen, så dere slipper å scrolle med bagen i fanget.
-- **Budsjett** — hver ting kan ha en anslått pris. Budsjettet viser hva dere har brukt og hva som gjenstår.
-- **Sammenlign priser** — åpner Prisjakt med dagens priser på det dere mangler.
-- **Trygge favoritter** — hjelp til å velge bilstol, vogn og bæresele, basert på test og sikkerhet.
 
 ## Godt å vite
 
 - Chevron-knappen øverst til venstre tar dere alltid tilbake til Hjem.
-- «Sammenlign priser» åpner Prisjakt med et søk på akkurat den tingen. Vi oppgir ingen pris selv, så det dere ser er alltid dagens priser fra ekte butikker — og vi tjener ingenting på lenkene i denne demoen.
 - Alt ligger kun på denne enheten. Ta en sikkerhetskopi under **Baby → Avansert** før dere bytter telefon.
 - Vi gir aldri medisinske råd. Anbefalingene er mengder og tidspunkter, ikke helsefaglige vurderinger.
 

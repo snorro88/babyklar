@@ -10,7 +10,7 @@ import { useApp } from '@/state/store';
 import { colors, radius, spacing, type } from '@/theme';
 import type { CategoryId, Item, Priority, Status } from '@/types';
 
-const STATUSES: Status[] = ['have', 'missing', 'want', 'to-buy', 'ordered', 'stored'];
+const STATUSES: Status[] = ['have', 'missing', 'want'];
 const PRIORITIES: Priority[] = ['important', 'can-wait', 'optional'];
 const ORIGINS: { id: NonNullable<Item['origin']>; label: string }[] = [
   { id: 'bought', label: 'Kjøpt' },

@@ -8,7 +8,7 @@ import { isDone } from '@/lib/insights';
 import { colors, radius, spacing, type } from '@/theme';
 import type { Item, Status } from '@/types';
 
-const QUICK_STATUSES: Status[] = ['have', 'missing', 'to-buy', 'ordered', 'want', 'not-needed'];
+const QUICK_STATUSES: Status[] = ['have', 'missing', 'want', 'not-needed'];
 
 const priorityTint: Record<Item['priority'], { tint: string; soft: string }> = {
   important: { tint: colors.warm, soft: colors.warmSoft },

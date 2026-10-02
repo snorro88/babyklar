@@ -7,9 +7,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ProgressRing } from '@/components/ProgressRing';
 import { Bar, Card, Note, Pill, SectionTitle } from '@/components/ui';
 import { CATEGORIES, SIZES } from '@/data/catalog';
+import { FEATURES } from '@/lib/features';
 import {
   categoryReadiness,
   garmentRowsForSize,
+  isCounted,
+  isDone,
   nextSize,
   seasonHint,
   summary,
@@ -22,13 +25,13 @@ import { useApp } from '@/state/store';
 import { colors, radius, shadow, spacing, type } from '@/theme';
 
 const QUICK = [
-  { label: 'Legg til', icon: 'plus', href: '/add-item' },
-  { label: 'Skann', icon: 'line-scan', href: '/scan' },
-  { label: 'Garderobe', icon: 'tshirt-crew-outline', href: '/wardrobe' },
-  { label: 'Sykehusbag', icon: 'bag-personal-outline', href: '/hospital-bag' },
-  { label: 'Størrelser', icon: 'calendar-clock', href: '/sizes' },
-  { label: 'Budsjett', icon: 'wallet-outline', href: '/budget' },
-] as const;
+  { label: 'Legg til', icon: 'plus', href: '/add-item', on: true },
+  { label: 'Skann', icon: 'line-scan', href: '/scan', on: true },
+  { label: 'Garderobe', icon: 'tshirt-crew-outline', href: '/wardrobe', on: true },
+  { label: 'Sykehusbag', icon: 'bag-personal-outline', href: '/hospital-bag', on: true },
+  { label: 'Størrelser', icon: 'calendar-clock', href: '/sizes', on: FEATURES.sizes },
+  { label: 'Budsjett', icon: 'wallet-outline', href: '/budget', on: FEATURES.budget },
+].filter((q) => q.on);
 
 export default function Home() {
   const router = useRouter();
@@ -43,7 +46,15 @@ export default function Home() {
   const categoryScores = useMemo(
     () =>
       CATEGORIES.filter((c) => items.some((i) => i.category === c.id))
-        .map((c) => ({ ...c, score: categoryReadiness(items, c.id) }))
+        .map((c) => {
+          const counted = items.filter((i) => i.category === c.id && isCounted(i));
+          return {
+            ...c,
+            // Everything marked «Trenger ikke» counts as ready, not as 0 %.
+            score: counted.length ? categoryReadiness(items, c.id) : 100,
+            missing: counted.filter((i) => !isDone(i)).length,
+          };
+        })
         .sort((a, b) => a.score - b.score),
     [items],
   );
@@ -65,7 +76,7 @@ export default function Home() {
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.topRow}>
           <View style={{ flex: 1 }}>
-            <Text style={type.small}>{born ? 'Babyen er født' : 'Snart er dere tre'}</Text>
+            <Text style={type.small}>{born ? 'Babyen er født' : 'Snart kommer babyen'}</Text>
             <Text style={styles.h1}>
               {born ? `${weeksSince(household.dueDate)} uker gammel` : `${weeks} uker til termin`}
             </Text>
@@ -114,7 +125,7 @@ export default function Home() {
           ) : null}
         </Card>
 
-        <SectionTitle>Dere mangler mest innen</SectionTitle>
+        <SectionTitle>Hva mangler?</SectionTitle>
         <Card style={{ gap: spacing(4) }}>
           {categoryScores.map((c) => (
             <Pressable key={c.id} onPress={() => router.push({ pathname: '/items', params: { category: c.id } })}>
@@ -123,7 +134,9 @@ export default function Home() {
                   <MaterialCommunityIcons name={c.icon as any} size={16} color={c.tint} />
                 </View>
                 <Text style={[type.bodyStrong, { flex: 1 }]}>{c.label}</Text>
-                <Text style={styles.catScore}>{c.score} %</Text>
+                <Text style={[styles.catScore, !c.missing && { color: colors.primary }]}>
+                  {c.missing ? `${c.missing} mangler` : '✓ Klart'}
+                </Text>
               </View>
               <View style={{ marginTop: spacing(2), marginLeft: spacing(9) }}>
                 <Bar value={c.score} tint={c.tint} />
@@ -132,30 +145,38 @@ export default function Home() {
           ))}
         </Card>
 
-        <SectionTitle
-          action={
-            <Pressable onPress={() => router.push('/wardrobe')}>
-              <Text style={styles.link}>Garderobe</Text>
-            </Pressable>
-          }
-        >
-          Snart
-        </SectionTitle>
-        <View style={{ gap: spacing(3) }}>
-          {insights.map((i, idx) => (
-            <Note key={idx} tone={i.tone}>
-              {i.text}
-            </Note>
-          ))}
-          {upcoming ? (
-            <Note tone="heads-up">{`${seasonHint(household.dueDate)} Neste størrelse blir ${upcoming}.`}</Note>
-          ) : null}
-        </View>
+        {FEATURES.upcoming ? (
+          <>
+            <SectionTitle
+              action={
+                <Pressable onPress={() => router.push('/wardrobe')}>
+                  <Text style={styles.link}>Garderobe</Text>
+                </Pressable>
+              }
+            >
+              Snart
+            </SectionTitle>
+            <View style={{ gap: spacing(3) }}>
+              {insights.map((i, idx) => (
+                <Note key={idx} tone={i.tone}>
+                  {i.text}
+                </Note>
+              ))}
+              {upcoming && FEATURES.sizes ? (
+                <Note tone="heads-up">{`${seasonHint(household.dueDate)} Neste størrelse blir ${upcoming}.`}</Note>
+              ) : null}
+            </View>
+          </>
+        ) : null}
 
         <SectionTitle>Hurtigknapper</SectionTitle>
         <View style={styles.quickRow}>
           {QUICK.map((q) => (
-            <Pressable key={q.label} onPress={() => router.push(q.href as any)} style={styles.quick}>
+            <Pressable
+              key={q.label}
+              onPress={() => router.push(q.href as any)}
+              style={[styles.quick, { width: QUICK.length <= 4 ? '22%' : '30%' }]}
+            >
               <View style={styles.quickIcon}>
                 <MaterialCommunityIcons name={q.icon as any} size={20} color={colors.primaryDark} />
               </View>
@@ -164,7 +185,7 @@ export default function Home() {
           ))}
         </View>
 
-        {offerCount > 0 ? (
+        {FEATURES.priceCheck && offerCount > 0 ? (
           <Pressable onPress={() => router.push('/offers')} style={{ marginTop: spacing(6) }}>
             <View style={styles.promo}>
               <MaterialCommunityIcons name="tag-search-outline" size={20} color={colors.surface} />
@@ -179,16 +200,18 @@ export default function Home() {
           </Pressable>
         ) : null}
 
-        <Pressable onPress={() => router.push('/favorites')} style={styles.favLink}>
-          <View style={styles.favIcon}>
-            <MaterialCommunityIcons name="star-check-outline" size={18} color={colors.primaryDark} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={type.bodyStrong}>Trygge favoritter</Text>
-            <Text style={type.small}>Hjelp til å velge bilstol, vogn og bæresele.</Text>
-          </View>
-          <MaterialCommunityIcons name="chevron-right" size={20} color={colors.inkSoft} />
-        </Pressable>
+        {FEATURES.favorites ? (
+          <Pressable onPress={() => router.push('/favorites')} style={styles.favLink}>
+            <View style={styles.favIcon}>
+              <MaterialCommunityIcons name="star-check-outline" size={18} color={colors.primaryDark} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={type.bodyStrong}>Trygge favoritter</Text>
+              <Text style={type.small}>Hjelp til å velge bilstol, vogn og bæresele.</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={20} color={colors.inkSoft} />
+          </Pressable>
+        ) : null}
 
         <Pressable onPress={() => router.push('/help')} style={styles.favLink}>
           <View style={styles.favIcon}>
@@ -244,7 +267,7 @@ const styles = StyleSheet.create({
   catIcon: { width: 28, height: 28, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   catScore: { ...type.small, fontWeight: '700', color: colors.inkSoft },
   quickRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing(3), rowGap: spacing(4) },
-  quick: { width: '30%', alignItems: 'center', gap: 6 },
+  quick: { alignItems: 'center', gap: 6 },
   quickIcon: {
     width: 52,
     height: 52,

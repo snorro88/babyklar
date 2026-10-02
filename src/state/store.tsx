@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useContext, useEffect, useMemo, useReducer } from 'react';
 
 import { CATALOG, TASKS, WARDROBE, WISHES } from '@/data/catalog';
-import { personalizeItems, personalizeTasks } from '@/lib/plan';
+import { isCarSeatTask, personalizeItems, personalizeTasks } from '@/lib/plan';
 import type {
   AppState,
   CategoryId,
@@ -88,13 +88,35 @@ const asArray = <T,>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 
 const CATEGORY_IDS: CategoryId[] = ['sleep', 'clothes', 'care', 'transport', 'food', 'hospitalBag', 'other'];
 const PRIORITIES: Priority[] = ['important', 'can-wait', 'optional'];
-const STATUSES: Status[] = ['have', 'missing', 'want', 'to-buy', 'ordered', 'not-needed', 'stored', 'outgrown'];
+const STATUSES: Status[] = ['have', 'missing', 'want', 'not-needed'];
+/** Statuses dropped to keep the app simple, mapped to the closest remaining one. */
+const LEGACY_STATUS: Record<string, Status> = {
+  'to-buy': 'missing',
+  ordered: 'have',
+  stored: 'have',
+  outgrown: 'not-needed',
+};
 const SITUATIONS: Situation[] = ['first', 'has-child', 'born'];
 const FOCUS_AREAS: FocusArea[] = ['equipment', 'clothes', 'hospitalBag', 'wishlist', 'owned', 'tasks', 'budget'];
 const WISH_PRIORITIES: WishItem['priority'][] = ['high', 'medium', 'low'];
 
 const isValidItem = (i: Item) =>
   CATEGORY_IDS.includes(i.category) && PRIORITIES.includes(i.priority) && STATUSES.includes(i.status);
+
+/** Household answers that change what's on the plan. */
+const PLAN_KEYS: (keyof Household)[] = ['hasCar', 'hasHandMeDowns', 'situation'];
+
+/** Re-tailors the tasks; brings the seeded car seat task back once there is a car again. */
+const replanTasks = (tasks: Task[], h: Household): Task[] => {
+  const restored = h.hasCar
+    ? TASKS.filter((t) => isCarSeatTask(t) && !tasks.some((x) => x.title === t.title)).map((t) => ({
+        ...t,
+        id: uid('task'),
+        done: false,
+      }))
+    : [];
+  return personalizeTasks([...restored, ...tasks], h);
+};
 
 /** Adds an item to the wishlist if it isn't already there (deduped by name). */
 const ensureWish = (wishes: WishItem[], name: string, size?: string): WishItem[] => {
@@ -112,9 +134,9 @@ export function sanitizeState(raw: unknown): AppState | null {
   const r = raw as Partial<AppState>;
   if (!Array.isArray(r.items) || !Array.isArray(r.tasks)) return null;
 
-  const rawItems = asArray<Item>(r.items).filter(
-    (i) => !!i && typeof i === 'object' && typeof i.id === 'string' && typeof i.name === 'string',
-  );
+  const rawItems = asArray<Item>(r.items)
+    .filter((i) => !!i && typeof i === 'object' && typeof i.id === 'string' && typeof i.name === 'string')
+    .map((i) => (LEGACY_STATUS[i.status] ? { ...i, status: LEGACY_STATUS[i.status] } : i));
   const items = rawItems.filter(isValidItem);
   // Items present but none schema-compatible → old/incompatible data, reseed fresh.
   if (rawItems.length && !items.length) return null;
@@ -240,8 +262,16 @@ function reducer(state: AppState, action: Action): AppState {
     case 'removeWish':
       return { ...state, wishes: state.wishes.filter((w) => w.id !== action.id) };
 
-    case 'setHousehold':
-      return { ...state, household: { ...state.household, ...action.patch } };
+    case 'setHousehold': {
+      const household = { ...state.household, ...action.patch };
+      if (!household.onboarded || !PLAN_KEYS.some((k) => k in action.patch)) return { ...state, household };
+      return {
+        ...state,
+        household,
+        items: personalizeItems(state.items, household),
+        tasks: replanTasks(state.tasks, household),
+      };
+    }
 
     case 'setDemoData': {
       const household = { ...state.household, demoData: action.on };

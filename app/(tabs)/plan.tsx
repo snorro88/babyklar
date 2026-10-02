@@ -126,7 +126,9 @@ export default function Plan() {
                     <Text style={[type.small, allDone && styles.catSubtextDone]}>
                       {!counted.length
                         ? 'Ingenting med dette filteret'
-                        : `${allDone ? '✓ Alt på plass' : `${missing} ting gjenstår`} · ${score} %`}
+                        : allDone
+                          ? '✓ Alt på plass'
+                          : `${missing} ting gjenstår`}
                     </Text>
                   </View>
                   <MaterialCommunityIcons

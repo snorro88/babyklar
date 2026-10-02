@@ -1,7 +1,7 @@
 import type { Item, Priority } from '@/types';
 
 /** Statuses where comparing prices is relevant — the item is missing or planned. */
-const OPEN_STATUS: Item['status'][] = ['missing', 'to-buy', 'want'];
+const OPEN_STATUS: Item['status'][] = ['missing', 'want'];
 
 export const isItemOpen = (item: Item) => OPEN_STATUS.includes(item.status);
 
