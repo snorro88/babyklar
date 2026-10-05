@@ -1,12 +1,17 @@
 import { Stack, useRouter, useSegments } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { Splash } from '@/components/Splash';
 import { AppProvider, useApp } from '@/state/store';
 import { colors } from '@/theme';
+
+// <Splash> hides the native launch screen once its identical copy is drawn on top.
+SplashScreen.preventAutoHideAsync();
 
 function RootNavigator() {
   const { state, ready } = useApp();
@@ -52,6 +57,7 @@ export default function RootLayout() {
           <StatusBar style="dark" />
           <RootNavigator />
         </AppProvider>
+        <Splash />
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

@@ -59,6 +59,7 @@ Enum values (see `src/types.ts`):
 - **`Alert.alert` with multiple buttons doesn't work on react-native-web** → use `src/lib/dialog.ts` (`confirm`/`notify`, falls back to `window.confirm`/`window.alert`). For multi-option prompts use an in-app `Modal` (see the Ønsker reason modal).
 - **Shadows**: use `shadow.card`/`shadow.floating` from theme (Platform.select: `boxShadow` web, `shadow*`+elevation native). Residual `shadow*` deprecation warning comes from expo-router/react-navigation, not app code.
 - **RN 0.86**: use `StyleSheet.absoluteFill` (not `absoluteFillObject`). **`@expo/vector-icons`** must stay an explicit dependency (SDK 56 removed it from `expo`).
+- **Startup splash**: `SplashScreen.preventAutoHideAsync()` in `app/_layout.tsx` keeps the native launch screen up until `src/components/Splash.tsx` has drawn an identical copy on top; that copy fades in the name and slides down after 2 s. Its `ICON_SIZE`/`BACKGROUND` must match `imageWidth`/`backgroundColor` of the expo-splash-screen plugin in `app.json`. `assets/icon.png` and `assets/splash-icon.png` are a drawn baby face (made with PIL, no source file).
 - Onboarding stores exact `dueDate` as `YYYY-MM-DD`; `weeksUntil()` rounds to whole weeks for display only.
 - **Product/UX guardrails** (`BabyKlar.md` §15): no medical advice, no trackers, no forum, no store. Recommendations are ranges; items may carry `why` text; affiliate offers only for items marked missing; safety-critical products (car seat, mattress, crib) are new-only + manually reviewed.
 
