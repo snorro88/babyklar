@@ -43,7 +43,7 @@
         "expo-image-picker",
         {
           "cameraPermission": "BabyKlar bruker kameraet når dere tar bilde av klær eller utstyr, slik at det kan registreres automatisk.",
-          "photosPermission": "BabyKlar trenger tilgang til bildene når dere vil skanne et bilde dere allerede har tatt."
+          "photosPermission": "BabyKlar trenger tilgang til bildene når dere vil bruke et bilde dere allerede har tatt."
         }
       ]
     ],

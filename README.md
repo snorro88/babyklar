@@ -25,7 +25,7 @@ Trykk `w` for web, `a` for Android-emulator, `i` for iOS-simulator, eller skann 
 | Ting | [app/(tabs)/items.tsx](app/(tabs)/items.tsx) | Søk, har/mangler, kategorifilter, statusendring |
 | Ønsker | [app/(tabs)/wishes.tsx](app/(tabs)/wishes.tsx) | Ønskeliste, delbar lenke, legg til ønske |
 | Delt ønskeliste | [app/shared-wishlist.tsx](app/shared-wishlist.tsx) | Slik ser familien lista uten app — med reservasjon |
-| Skann | [app/scan.tsx](app/scan.tsx) | Simulert AI-skanning med godkjenning før lagring |
+| Ta bilde | [app/scan.tsx](app/scan.tsx) | Bildegjenkjenning (OpenAI) med godkjenning før lagring |
 | Legg til | [app/add-item.tsx](app/add-item.tsx) | Manuell registrering av ting |
 | Garderobe | [app/wardrobe.tsx](app/wardrobe.tsx) | Har vs. anbefalt per størrelse, neste størrelse, sesong |
 | Baby | [app/baby.tsx](app/baby.tsx) | Navn (valgfritt), størrelse, familie, personvern, nullstill |
@@ -61,10 +61,10 @@ på i denne demoen — én tracking-ID i [src/lib/prices.ts](src/lib/prices.ts) 
 
 ## Ikke bygget (bevisst)
 
-Ingen innlogging, ingen backend, ingen ekte AI, ingen betaling, ingen ekte provisjon
-eller klikksporing. Skanningen bruker forhåndsdefinerte forslag i
-[src/data/catalog.ts](src/data/catalog.ts), og prislenkene går til Prisjakt via
-[src/lib/prices.ts](src/lib/prices.ts).
+Ingen innlogging, ingen database, ingen betaling, ingen ekte provisjon eller klikksporing.
+Eneste serverdel er bildegjenkjenningen i [app/api/scan+api.ts](app/api/scan+api.ts); uten
+`OPENAI_API_KEY` vises eksempelforslag fra [src/data/catalog.ts](src/data/catalog.ts).
+Prislenkene går til Prisjakt via [src/lib/prices.ts](src/lib/prices.ts).
 
 ## Neste steg
 

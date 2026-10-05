@@ -26,7 +26,7 @@ import { colors, radius, shadow, spacing, type } from '@/theme';
 
 const QUICK = [
   { label: 'Legg til', icon: 'plus', href: '/add-item', on: true },
-  { label: 'Skann', icon: 'line-scan', href: '/scan', on: true },
+  { label: 'Ta bilde', icon: 'camera-outline', href: '/scan', on: true },
   { label: 'Garderobe', icon: 'tshirt-crew-outline', href: '/wardrobe', on: true },
   { label: 'Sykehusbag', icon: 'bag-personal-outline', href: '/hospital-bag', on: true },
   { label: 'Størrelser', icon: 'calendar-clock', href: '/sizes', on: FEATURES.sizes },

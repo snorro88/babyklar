@@ -31,8 +31,8 @@ Under fanen **Ting** ligger alt et nyfødt barn vanligvis trenger. Trykk på en 
 
 Bruk 10–15 minutter på de viktigste. Resten kan vente.
 
-**3. Eller skann en bunke**
-Har dere fått en pose med klær eller en eske? Trykk på den runde skanneknappen midt i menyen og ta bilde (eller velg et bilde dere har). Sjekk forslagene, juster antall og størrelse, og lagre. Ting dere manglet krysses av automatisk, og ingenting lagres uten at dere sier ja.
+**3. Eller ta bilde av en bunke**
+Har dere fått en pose med klær eller en eske? Trykk på den runde kameraknappen midt i menyen og ta bilde (eller velg et bilde dere har). Sjekk forslagene, juster antall og størrelse, og lagre. Ting dere manglet krysses av automatisk, og ingenting lagres uten at dere sier ja.
 
 **4. Sjekk Hjem**
 Nå viser **Hjem** hvor klare dere er, hva som er viktigst nå, og hvor mange ting som mangler i hver kategori. Prosenten er bare et hjelpemiddel — den skal ikke stresse dere.

@@ -151,7 +151,7 @@ export default function Scan() {
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
       <View style={styles.header}>
-        <Text style={type.title}>Skann</Text>
+        <Text style={type.title}>Ta bilde</Text>
         <Pressable onPress={() => router.back()} hitSlop={10} style={styles.close}>
           <MaterialCommunityIcons name="close" size={20} color={colors.inkSoft} />
         </Pressable>
@@ -227,7 +227,7 @@ export default function Scan() {
               {photo ? <Image source={{ uri: photo.uri }} style={styles.thumb} /> : null}
               <Note tone={example ? 'heads-up' : 'ok'} style={{ flex: 1 }}>
                 {example
-                  ? 'Eksempelforslag – AI-skanning er ikke satt opp ennå.'
+                  ? 'Eksempelforslag – bildegjenkjenning er ikke satt opp ennå.'
                   : suggestions.length
                     ? `Det ser ut som ${label}. Sjekk gjerne over før dere lagrer.`
                     : `Det ser ut som ${label}, men vi fant ingen babyting. Prøv et nytt bilde.`}
@@ -307,7 +307,7 @@ export default function Scan() {
           </ScrollView>
 
           <View style={styles.footer}>
-            <Button label="Skann på nytt" variant="ghost" onPress={restart} style={{ flex: 1 }} />
+            <Button label="Ta nytt bilde" variant="ghost" onPress={restart} style={{ flex: 1 }} />
             {suggestions.length ? (
               <Button label={`Lagre ${keepCount}`} onPress={save} disabled={!keepCount} style={{ flex: 1 }} />
             ) : null}

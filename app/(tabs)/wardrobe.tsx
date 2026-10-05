@@ -93,7 +93,7 @@ export default function Wardrobe() {
           <Empty
             icon="tshirt-crew-outline"
             title="Ingenting registrert"
-            body={`Skann en bunke klær, så fyller vi ut str. ${size} for dere.`}
+            body={`Ta bilde av en bunke klær, så fyller vi ut str. ${size} for dere.`}
           />
         )}
 

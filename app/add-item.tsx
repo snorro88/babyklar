@@ -169,7 +169,7 @@ export default function AddItem() {
           </Card>
 
           <Text style={[type.small, { textAlign: 'center', marginTop: spacing(4) }]}>
-            Slipper du å skrive? Bruk skanning og ta et bilde i stedet.
+            Slipper du å skrive? Ta et bilde i stedet.
           </Text>
         </ScrollView>
 

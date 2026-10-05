@@ -12,10 +12,10 @@ function ScanButton() {
       <Pressable
         onPress={() => router.push('/scan')}
         accessibilityRole="button"
-        accessibilityLabel="Skann med kamera"
+        accessibilityLabel="Ta bilde"
         style={({ pressed }) => [styles.scan, pressed && { transform: [{ scale: 0.94 }] }]}
       >
-        <MaterialCommunityIcons name="line-scan" size={26} color={colors.surface} />
+        <MaterialCommunityIcons name="camera" size={26} color={colors.surface} />
       </Pressable>
     </View>
   );

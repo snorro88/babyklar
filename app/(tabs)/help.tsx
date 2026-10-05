@@ -22,9 +22,9 @@ const FIRST_TIME: { title: string; body: string; icon: string }[] = [
     body: 'Her ligger alt et nyfødt barn vanligvis trenger. Trykk på en ting og sett status: Har, Mangler, Ønsker eller Trenger ikke. Bruk 10–15 minutter på de viktigste — resten kan vente.',
   },
   {
-    icon: 'line-scan',
-    title: 'Eller skann en bunke',
-    body: 'Har dere fått en pose med klær eller en eske? Trykk på den runde skanneknappen midt i menyen og ta bilde. Sjekk forslagene før de lagres — ting dere manglet krysses av automatisk.',
+    icon: 'camera-outline',
+    title: 'Eller ta bilde av en bunke',
+    body: 'Har dere fått en pose med klær eller en eske? Trykk på den runde kameraknappen midt i menyen og ta bilde. Sjekk forslagene før de lagres — ting dere manglet krysses av automatisk.',
   },
   {
     icon: 'home-variant-outline',
