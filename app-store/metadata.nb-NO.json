@@ -21,7 +21,20 @@
     "localSource": "1.0.0",
     "submittedVersion": null,
     "plannedStoreVersion": "1.0.0",
-    "note": "Neste appbuild er konfigurert som 1.0.0 etter utgivers ønske. Allerede opplastet build 4 rapporterer fortsatt 0.1.0 og kan ikke omdøpes. En ny build må bygges og lastes opp for at binærfilen også skal rapportere 1.0.0. Ingenting er sendt til review."
+    "note": "Build 5 (1.0.0) er bygget, lastet opp og ferdig prosessert av Apple. Den er knyttet til den eksisterende interne TestFlight-gruppen Team (Expo). App Store-utkastet har fortsatt build 4 (0.1.0) valgt. Den nye builden er kun til testing; lanseringsmanglene er ikke rettet, og ingenting er sendt til offentlig App Review."
+  },
+  "testFlight": {
+    "verifiedAt": "2026-10-20",
+    "version": "1.0.0",
+    "buildNumber": "5",
+    "buildStatus": "Ready to Submit",
+    "appleProcessingComplete": true,
+    "url": "https://appstoreconnect.apple.com/teams/a5020836-f524-4486-82b9-6531bd91141d/apps/6818113966/testflight/ios/806de109-ea8d-4c63-b844-e7dd865ad386",
+    "sourceCommit": "3643dc597fcfd075e7dda17b632165e43cb032ab",
+    "easBuildId": "a2c17ad4-efb7-4207-ada4-6641f1fee283",
+    "easSubmissionId": "7e4fe85d-8de2-4d72-9f31-8481369c3d64",
+    "internalTestingGroup": {"name": "Team (Expo)", "testers": 1},
+    "nativeFunctionalTestingCompleted": false
   },
   "reviewContact": {
     "firstName": "Snorre",
@@ -58,7 +71,7 @@
     "additionalKnownRequirements": [
       "Live final privacy-policy URL",
       "Corrected and verified release build",
-      "New binary upload for the binary itself to report version 1.0.0"
+      "Select the final verified release build in the App Store draft after native testing and release fixes"
     ]
   },
   "whatsNew": {
