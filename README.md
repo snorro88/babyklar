@@ -15,6 +15,27 @@ Trykk `w` for web, `a` for Android-emulator, `i` for iOS-simulator, eller skann 
 
 > Merk: `.npmrc` peker mot offentlig npm-registry, siden den globale konfigurasjonen på denne maskinen bruker et privat Artifactory-repo.
 
+## Bygg og last opp til TestFlight
+
+Versjonen for neste binærfil settes i `expo.version` i [app.json](app.json).
+Produksjonsprofilen i [eas.json](eas.json) øker iOS-buildnummeret automatisk på EAS
+og peker innsendingen til BabyKlar i App Store Connect.
+
+```powershell
+npm run typecheck
+npx eas-cli@25.2.0 build --platform ios --profile production --auto-submit --non-interactive
+```
+
+Kommandoen krever innlogging hos Expo og ferdig konfigurerte signerings- og
+innsendingsopplysninger. Den bruker EAS-buildkvote og laster den ferdige builden
+opp til App Store Connect/TestFlight, **ikke til offentlig App Review**.
+En Git-push alene starter ingen build i dette repoet.
+
+Vent til Apple har prosessert builden, test den i TestFlight, og velg deretter den
+nye builden i App Store-utkastet. Eksisterende opplastede binærfiler kan ikke
+omdøpes. Et nytt versjonsnummer løser ikke de kjente lanseringsmanglene som er
+beskrevet i [innsendingspakken](app-store/innsendingspakke.html).
+
 ## Hva som er med i demoen
 
 | Skjerm | Fil | Innhold |

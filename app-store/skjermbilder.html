@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BabyKlar – skjermbildestudio</title>
+  <style>
+    :root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#FBF7F3;color:#2E2A26;font:16px/1.6 system-ui,sans-serif}header,main{max-width:1440px;margin:auto;padding:32px}h1{font-size:clamp(32px,5vw,56px);letter-spacing:-2px;line-height:1.1}h2{font-size:20px}a{color:#3A6C5F}.brand{font-weight:750;letter-spacing:2px;color:#3A6C5F}.intro{max-width:850px}.notice{padding:18px 24px;border:1px solid #B79A6B;background:#FBF0D9;border-radius:16px}.controls{display:grid;gap:16px;padding:24px;background:#fff;border:1px solid #EDE4DA;border-radius:20px;margin:24px 0}select,button{font:inherit;border-radius:10px;padding:10px 16px;border:1px solid #BFB3A5}button{background:#3A6C5F;color:#fff;cursor:pointer}button:disabled{background:#EDE4DA;color:#5B534B;cursor:not-allowed}select{background:#fff;color:#2E2A26;max-width:100%}input[type=file]{max-width:100%;font:inherit}input[type=checkbox]{width:20px;height:20px;vertical-align:middle}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}.shot{min-width:0;background:#fff;padding:18px;border-radius:20px;border:1px solid #EDE4DA}.shot p{font-size:14px}.shot canvas{width:100%;height:auto;display:block;border-radius:12px;border:1px solid #EDE4DA}.shot label{display:block;margin:14px 0}.status{min-height:3em;color:#7E471B}.status.ok{color:#3A6C5F}.error{color:#A32121;font-weight:650}.actions{display:flex;gap:8px;flex-wrap:wrap}.secondary{color:#3A6C5F;background:#E4F0EC}.note{font-size:14px;color:#5B534B}footer{padding:32px}code{font-family:ui-monospace,monospace}@media(max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){header,main{padding:20px}.grid{grid-template-columns:1fr}}
+    .controls{grid-template-columns:minmax(0,1fr)}.controls>*{min-width:0}#format{width:100%}
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">BABYKLAR / APP STORE</div>
+  <h1>En roligere første<br>følelse.</h1>
+  <p class="intro">Seks sammenhengende produktbilder med én fordel per bilde. Ingen kjøpspress, ingen kunstige anmeldelser, ingen lovnader om funksjoner som ikke virker. Appen får mesteparten av plassen.</p>
+  <p><a href="innsendingspakke.html">Til innsendingspakken</a></p>
+  <div class="notice"><strong>Webreferansene er designutkast, ikke App Store-skjermbilder.</strong> De viser faktisk webgrensesnitt med fiktive data. Last inn autentiske, uredigerte PNG-/JPEG-skjermbilder fra den ferdige iOS-builden for å aktivere opplastingseksport. Bildet strekkes eller beskjæres aldri.</div>
+  <div class="controls">
+    <label for="format"><strong>Velg målformat</strong></label>
+    <select id="format">
+      <option value="iphone-medium">iPhone Dynamic Island, medium – 1206 × 2622 (kreves i denne innsendingen)</option>
+      <option value="iphone-large">iPhone Dynamic Island, stor / 6,9" – 1320 × 2868</option>
+      <option value="iphone-classic">iPhone Face ID, stor / 6,5" – 1284 × 2778</option>
+      <option value="ipad">iPad 13" – 2064 × 2752</option>
+    </select>
+    <span id="dimensions" class="note"></span>
+    <label><input type="checkbox" id="verified"> Jeg bekrefter at de importerte bildene er fra riktig iPhone-/iPad-build, viser tilgjengelige funksjoner, og ikke inneholder personopplysninger, demo-lenker eller feilmeldinger.</label>
+    <span class="note">Velger du et annet format, tømmes de importerte bildene. iPad krever egne iPad-opptak. En iPhone i en stor ramme er ikke et iPad-skjermbilde. Filer behandles kun i nettleseren; studioet laster ikke opp bildene dine.</span>
+  </div>
+</header>
+<main>
+  <div id="global-error" class="error" role="alert"></div>
+  <div id="shots" class="grid"></div>
+  <p class="note">Last opp i nummerrekkefølge. De tre første bildene skal fungere alene. PNG-eksport er i eksakt valgt oppløsning, med heldekkende bakgrunn. Appikonet legges til gjennom appbuilden, ikke i skjermbildefeltet.</p>
+</main>
+<footer><a href="https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications">Apples størrelseskrav</a> · kontrollert 20. oktober 2026</footer>
+<script>
+'use strict';
+const formats = {
+  'iphone-medium': { width:1206, height:2622, inputs:[[1179,2556],[1206,2622]], label:'iPhone, medium Dynamic Island' },
+  'iphone-large': { width:1320, height:2868, inputs:[[1260,2736],[1290,2796],[1320,2868]], label:'iPhone, stor Dynamic Island' },
+  'iphone-classic': { width:1284, height:2778, inputs:[[1242,2688],[1284,2778]], label:'iPhone, stor Face ID' },
+  ipad: { width:2064, height:2752, inputs:[[2064,2752],[2048,2732]], label:'iPad 13 tommer' }
+};
+const shots = [
+  { id:'01-hjem', title:['Litt mer oversikt.','Litt mindre stress.'], sub:'Alt det praktiske før babyen kommer.', screen:'Hjem', capture:'Vis Hjem med noen ting registrert og både klare og manglende kategorier.', bg:'#E4F0EC', accent:'#3A6C5F' },
+  { id:'02-ting', title:['Hva har dere?','Hva mangler?'], sub:'Samle babyutstyret på ett sted.', screen:'Ting', capture:'Vis Ting med en blanding av Har og Mangler. Ikke bruk ekte barns navn.', bg:'#FBF7F3', accent:'#3A6C5F' },
+  { id:'03-plan', title:['Ta det viktigste.','Resten kan vente.'], sub:'En plan dere kan ta steg for steg.', screen:'Plan', capture:'Vis Plan med oppgaver. Uferdige delingsoppgaver må være rettet i builden først.', bg:'#FBEAE0', accent:'#865032' },
+  { id:'04-garderobe', title:['Små klær.','Full oversikt.'], sub:'Se hva dere har i hver størrelse.', screen:'Garderobe', capture:'Velg størrelse 56 og registrer noen klær. Vis antall og veiledende mengder.', bg:'#EDEAF8', accent:'#5D568F' },
+  { id:'05-pakking', title:['Pakk bagen.','Én ting om gangen.'], sub:'En pakkeliste for den store dagen.', screen:'Pakkemodus', capture:'Åpne Sykehusbag → Start pakkemodus. Vis én ting og avkryssingsknappen.', bg:'#F7E8EE', accent:'#874E68' },
+  { id:'06-valgfritt', title:['Dere bestemmer','hva dere trenger.'], sub:'«Trenger ikke» er også et godt valg.', screen:'Detaljer', capture:'Åpne Selskapsantrekk og velg Trenger ikke. Ikke vis medisinske råd.', bg:'#FBF0D9', accent:'#765B20' }
+];
+const formatSelect = document.getElementById('format');
+const confirmation = document.getElementById('verified');
+const entries = [];
+let generation = 0;
+function format() { return formats[formatSelect.value]; }
+function loadImage(src) {
+  return new Promise((resolve,reject)=>{
+    const image=new Image();
+    image.onload=()=>resolve(image);
+    image.onerror=()=>reject(new Error('Bildet kunne ikke leses. Bruk en gyldig PNG- eller JPEG-fil.'));
+    image.src=src;
+  });
+}
+function rounded(ctx,x,y,w,h,r) { ctx.beginPath(); ctx.roundRect(x,y,w,h,r); }
+function fitText(ctx,text,maxWidth,size,weight) {
+  ctx.font=`${weight} ${size}px system-ui, sans-serif`;
+  while(ctx.measureText(text).width>maxWidth && size>20) ctx.font=`${weight} ${--size}px system-ui, sans-serif`;
+}
+function draw(entry) {
+  const f=format(), canvas=entry.canvas, shot=entry.shot;
+  canvas.width=f.width; canvas.height=f.height;
+  const ctx=canvas.getContext('2d',{alpha:false});
+  if(!ctx) throw new Error('Nettleseren støtter ikke tegning av bildene.');
+  const scale=f.width/1320, H=f.height/scale;
+  ctx.scale(scale,scale);
+  ctx.fillStyle=shot.bg; ctx.fillRect(0,0,1320,H);
+  ctx.fillStyle=shot.accent;
+  ctx.globalAlpha=0.055;ctx.beginPath();ctx.arc(1280,120,390,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+  ctx.textBaseline='top';
+  ctx.font='700 34px system-ui, sans-serif';ctx.fillText('BabyKlar',96,75);
+  ctx.fillStyle='#2E2A26';
+  const tablet=formatSelect.value==='ipad';
+  const titleSize=tablet?79:96, lineHeight=tablet?96:116, titleY=tablet?145:186;
+  shot.title.forEach((line,index)=>{fitText(ctx,line,1130,titleSize,750);ctx.fillText(line,96,titleY+index*lineHeight);});
+  const subY=titleY+2*lineHeight+26;
+  ctx.fillStyle=shot.accent;fitText(ctx,shot.sub,1130,tablet?34:42,500);ctx.fillText(shot.sub,96,subY);
+  const box={x:80,y:subY+(tablet?88:125),width:1160,height:H-(subY+(tablet?88:125))-100};
+  const image=entry.native || entry.preview;
+  if(image) {
+    const ratio=Math.min(box.width/image.naturalWidth,box.height/image.naturalHeight);
+    const width=image.naturalWidth*ratio, height=image.naturalHeight*ratio;
+    const x=(1320-width)/2, y=box.y+(box.height-height)/2;
+    ctx.save();ctx.shadowColor='rgba(46,42,38,0.16)';ctx.shadowBlur=40;ctx.shadowOffsetY=16;
+    rounded(ctx,x-10,y-10,width+20,height+20,tablet?24:38);ctx.fillStyle='#FFFFFF';ctx.fill();ctx.restore();
+    ctx.drawImage(image,x,y,width,height);
+  } else {
+    rounded(ctx,box.x,box.y,box.width,box.height,30);ctx.fillStyle='#FFFFFF';ctx.fill();
+    ctx.fillStyle=shot.accent;ctx.textAlign='center';ctx.font='600 40px system-ui, sans-serif';
+    ctx.fillText('Sett inn ekte '+shot.screen+'-skjermbilde',660,box.y+box.height/2-20);ctx.textAlign='left';
+  }
+  if(!entry.native) {
+    ctx.fillStyle='#2E2A26';ctx.fillRect(0,H-62,1320,62);
+    ctx.fillStyle='#FFFFFF';ctx.textAlign='center';ctx.font='600 25px system-ui, sans-serif';
+    ctx.fillText('DESIGNUTKAST · WEBREFERANSE · IKKE TIL OPPLASTING',660,H-46);ctx.textAlign='left';
+  }
+  entry.exportButton.disabled=!(entry.native && confirmation.checked);
+}
+async function download(entry,draft) {
+  try {
+    if(!draft && (!entry.native || !confirmation.checked)) throw new Error('Importer og bekreft et ekte iOS-skjermbilde først.');
+    const blob=await new Promise((resolve,reject)=>entry.canvas.toBlob(result=>result?resolve(result):reject(new Error('PNG-eksport mislyktes.')),'image/png'));
+    const url=URL.createObjectURL(blob), link=document.createElement('a');
+    link.download=`${draft?'UTKAST-':''}BabyKlar-nb-NO-${formatSelect.value}-${entry.shot.id}.png`;
+    link.href=url;link.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
+  } catch(error) { entry.status.textContent=error.message+' Hvis webreferanser åpnes fra disk, bruk en lokal nettserver for utkastseksport. Importerte bilder kan eksporteres direkte.';entry.status.className='status error'; }
+}
+for(const shot of shots) {
+  const article=document.createElement('article');article.className='shot';
+  const heading=document.createElement('h2');heading.textContent=shot.id.slice(0,2)+' / '+shot.screen;
+  const canvas=document.createElement('canvas');canvas.setAttribute('aria-label',shot.title.join(' '));canvas.setAttribute('role','img');
+  const hint=document.createElement('p');hint.textContent=shot.capture;
+  const label=document.createElement('label');label.textContent='Importer ekte skjermbilde: ';
+  const input=document.createElement('input');input.type='file';input.accept='image/png,image/jpeg';input.setAttribute('aria-label','Skjermbilde for '+shot.screen);label.append(input);
+  const status=document.createElement('p');status.className='status';status.setAttribute('role','status');
+  const actions=document.createElement('div');actions.className='actions';
+  const exportButton=document.createElement('button');exportButton.textContent='Last ned App Store-PNG';exportButton.disabled=true;
+  const draftButton=document.createElement('button');draftButton.textContent='Last ned utkast';draftButton.className='secondary';
+  actions.append(exportButton,draftButton);article.append(heading,canvas,hint,label,status,actions);document.getElementById('shots').append(article);
+  const entry={shot,canvas,status,input,exportButton,draftButton,native:null,preview:null,request:0};entries.push(entry);
+  exportButton.addEventListener('click',()=>download(entry,false));
+  draftButton.addEventListener('click',()=>download(entry,true));
+  input.addEventListener('change',async()=>{
+    const request=++entry.request, currentGeneration=generation;
+    entry.native=null;draw(entry);
+    const file=input.files[0];if(!file){status.textContent='Ingen fil valgt.';return;}
+    const url=URL.createObjectURL(file);
+    try {
+      if(!['image/png','image/jpeg'].includes(file.type)) throw new Error('Velg PNG eller JPEG. HEIC støttes ikke.');
+      const image=await loadImage(url);
+      if(request!==entry.request || currentGeneration!==generation) return;
+      if(!format().inputs.some(([w,h])=>image.naturalWidth===w && image.naturalHeight===h)) throw new Error(`Bildet er ${image.naturalWidth} × ${image.naturalHeight}. Velg riktig målformat og et originalt skjermbilde i en av de oppgitte størrelsene.`);
+      entry.native=image;status.textContent=`Importert: ${file.name} (${image.naturalWidth} × ${image.naturalHeight}). Kontroller innholdet visuelt før opplasting.`;status.className='status ok';
+    } catch(error) { if(request===entry.request && currentGeneration===generation){status.textContent=error.message;status.className='status error';} }
+    finally { URL.revokeObjectURL(url);if(request===entry.request && currentGeneration===generation) draw(entry); }
+  });
+}
+async function reset() {
+  const currentGeneration=++generation;
+  confirmation.checked=false;
+  document.getElementById('dimensions').textContent='Originale skjermbilder som godtas: '+format().inputs.map(([w,h])=>`${w} × ${h}`).join(' eller ')+'. Eksport: '+format().width+' × '+format().height+' piksler.';
+  await Promise.all(entries.map(async entry=>{
+    entry.request++;entry.native=null;entry.preview=null;entry.input.value='';
+    entry.status.textContent='Venter på ekte iOS-skjermbilde.';entry.status.className='status';draw(entry);
+    if(formatSelect.value==='ipad') return;
+    try {
+      const image=await loadImage('bilder/web-'+entry.shot.id+'.png');
+      if(currentGeneration!==generation) return;
+      entry.preview=image;
+      if(!entry.native) entry.status.textContent='Viser webreferanse med fiktive data. Ikke et iOS-opptak.';
+      draw(entry);
+    } catch(error) {
+      if(currentGeneration===generation) entry.status.textContent='Ingen webreferanse tilgjengelig. Importer et ekte skjermbilde. '+error.message;
+    }
+  }));
+}
+formatSelect.addEventListener('change',()=>reset().catch(showError));
+confirmation.addEventListener('change',()=>{try{entries.forEach(draw);}catch(error){showError(error);}});
+function showError(error){document.getElementById('global-error').textContent=error.message;}
+reset().catch(showError);
+</script>
+</body>
+</html>

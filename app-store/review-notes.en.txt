@@ -1,0 +1,31 @@
+WORKING DRAFT — NOT READY TO PASTE INTO APP STORE CONNECT
+Remove this heading only after verifying the final submission build and filling in the AI section below. Local source revision reviewed: 2fe9842. The TestFlight binary was not inspected.
+
+BabyKlar is a Norwegian-language planning app for expectant and new parents. It helps users keep an inventory of baby equipment, prioritise preparation tasks, track clothing by size, and pack a hospital bag. It is free, with no subscriptions or in-app purchases. No account, sign-in, or invitation is required.
+
+Suggested review path:
+1. Launch the app and complete onboarding. Select "Første barn" (first child), a future due date, and any household preferences. The baby's name is optional.
+2. On "Hjem" (Home), inspect the preparation summary and prioritised tasks.
+3. Open "Ting" (Items). Open an item and change its status to "Har" (Have), "Mangler" (Missing), or "Trenger ikke" (Not needed). Return to Home to see the updated summary.
+4. Open "Plan" and complete a task.
+5. From Home, open "Garderobe" (Wardrobe) and select a clothing size.
+6. From Home, open "Sykehusbag" (Hospital bag), then "Start pakkemodus" (Start packing mode). Mark an item as packed.
+7. Open the bear icon at the top of Home to access "Baby" settings. "Avansert" (Advanced) contains backup export and restore. "Slett alle lokale data" deletes/resets the app's local user data. Test deletion last.
+
+The inventory and preparation state are stored locally on the device. An exported backup is shared only using the destination chosen by the user. There is no automatic household synchronisation.
+
+[REQUIRED: Describe what is ACTUALLY included in this build. If photo recognition remains: explain that "Ta bilde" / "Velg fra bilder" requires internet access, the exact consent flow shown before upload, that the selected image and non-clothing item names are sent via the BabyKlar backend to OpenAI, and how permission can be declined. Verify the live production endpoint using a non-personal sample photo of baby equipment. Attach that sample to App Review if useful. Do not claim the endpoint is tested until it is.]
+
+[ALTERNATIVE: If photo recognition is removed from the release, replace the paragraph above with an accurate statement that this build does not upload photos or use third-party AI. Confirm every entry point and help text has been removed. Do not leave both alternatives in the final notes.]
+
+[REQUIRED: Confirm that non-functional online wish-list links and gift reservations have been removed or implemented end-to-end. Describe the exact remaining wish-list functionality. Do not describe a fixed demo link as working sharing.]
+
+[REQUIRED: If the five-tap example-data switch is retained, disclose its location and destructive replacement behaviour here. Prefer removing demo-only functionality from the release. Normal review must work with a clean installation, without this switch.]
+
+The app is intended for adults preparing for a baby, not for use by children. It is a practical planning tool, not a medical service.
+
+Review contact: Snorre Olimstad
+Email: snorre.olimstad@gmail.com
+Phone: [Add an available phone number, including country code, in the private App Review contact fields.]
+Privacy policy: [Add the live HTTPS URL.]
+Support: [Add the live HTTPS URL.]

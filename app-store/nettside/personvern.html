@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="nb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Utkast – personvern i BabyKlar</title>
+  <style>
+    body{margin:0;background:#FBF7F3;color:#2E2A26;font:17px/1.75 system-ui,sans-serif}main{max-width:800px;margin:auto;padding:48px 24px}a{color:#3A6C5F}h1{font-size:42px;line-height:1.1}h2{margin-top:36px;font-size:24px}.warning,.todo{padding:20px;background:#FFF0D5;border:2px solid #9A630C;border-radius:14px}.todo{margin:20px 0}dt{font-weight:700;margin-top:16px}dd{margin-left:0}
+  </style>
+</head>
+<body>
+<main>
+  <aside class="warning"><strong>IKKE PUBLISER SOM FERDIG PERSONVERNERKLÆRING.</strong> Utkast basert på lokal kildekode, 20. oktober 2026. Drift, leverandøravtaler, lagringstider, behandlingsgrunnlag og internasjonale overføringer må avklares. Alle gule felt må erstattes med verifiserte opplysninger. Fjern utkastmerking først når teksten stemmer med utgivelsen.</aside>
+  <h1>Personvern i BabyKlar</h1>
+  <p>BabyKlar hjelper foreldre med praktisk planlegging og oversikt over babyutstyr. Her beskriver vi hvilke opplysninger som brukes, hva som blir på enheten, og hva som kan sendes ut av enheten.</p>
+  <h2>1. Hvem er ansvarlig?</h2>
+  <p>Behandlingsansvarlig: Snorre Olimstad. Kontakt: <a href="mailto:snorre.olimstad@gmail.com">snorre.olimstad@gmail.com</a>.</p>
+  <p class="todo">AVKLAR: Er Snorre Olimstad riktig juridisk behandlingsansvarlig ved lansering? Legg til nødvendig virksomhetsidentifikasjon og kontaktadresse. Sett dato for ikrafttredelse.</p>
+  <h2>2. Oversikten som lagres på enheten</h2>
+  <p>Appen lagrer termin eller fødselsdato, valgfritt navn/kallenavn, familieinnstillinger, utstyr, klær, oppgaver og ønsker lokalt på enheten. Informasjonen brukes til å tilpasse og vise planen. Appen krever ikke en brukerkonto og har ikke automatisk synkronisering mellom familiemedlemmer.</p>
+  <p>Opplysningene kan være personopplysninger. Termin og andre opplysninger kan også røpe graviditet eller helseforhold. Ikke registrer flere opplysninger enn du trenger. Lokal lagring er ikke det samme som at ingen personopplysninger behandles.</p>
+  <h2>3. Valgfri bildegjenkjenning</h2>
+  <p class="todo">BEHOLD BARE HVIS FUNKSJONEN ER MED: Kildekoden sender bildet automatisk etter bildevalg. En tydelig tillatelsesdialog før opplasting er ikke implementert. Denne teksten alene gir ikke samtykke og retter ikke appen. Hvis funksjonen fjernes, må hele dette avsnittet og øvrige omtaler tilpasses.</p>
+  <p>Når bildegjenkjenning brukes, komprimeres det valgte bildet og sendes til BabyKlars server. Navn på registrert utstyr utenfor kleskategorien sendes også, slik at forslag kan kobles til eksisterende ting. Serveren sender bildet og disse navnene videre til OpenAI for å foreslå type utstyr, antall og eventuelt synlig størrelse. Forslagene må kontrolleres av deg før de lagres i oversikten.</p>
+  <p>Profilens termin/fødselsdato og barnets navn er ikke egne felter i denne forespørselen. Personopplysninger kan likevel følge med hvis de finnes i bildet eller i et utstyrsnavn. Bruk bare bilder av ting, uten personer, dokumenter eller identifiserende etiketter.</p>
+  <p class="todo">FYLL INN: Hva brukeren får vite før opplasting, hvordan tillatelse gis og trekkes tilbake, og bekreft at manuell registrering fungerer uten tillatelsen. Kamera-/bildetilgang i iOS må ikke omtales som automatisk tillatelse til å sende data til OpenAI.</p>
+  <h2>4. Leverandører og behandling utenfor enheten</h2>
+  <dl>
+    <dt>Hosting av bildegjenkjenning</dt><dd>Produksjonskonfigurasjonen peker mot EAS Hosting fra Expo. Server-/tilgangslogger kan behandle tekniske data, som IP-adresse og forespørselsinformasjon.</dd>
+    <dt>OpenAI</dt><dd>Behandler bilde og utstyrsnavn ved bildegjenkjenning. OpenAI oppgir at API-data normalt ikke brukes til modelltrening med mindre kunden aktivt velger å dele dem. Standard misbrukslogger kan oppbevares i opptil 30 dager, med unntak. Dette er leverandørens generelle dokumentasjon, ikke en bekreftelse på innstillingene for BabyKlar.</dd>
+    <dt>Henvendelser til support</dt><dd>E-postadressen din og det du sender oss, behandles for å svare på henvendelsen. Kontaktadressen bruker Gmail fra Google. Ikke send sensitive opplysninger.</dd>
+    <dt>Sikkerhetskopier du selv eksporterer</dt><dd>Kopien inneholder appens registrerte opplysninger og sendes til destinasjonen du selv velger. Denne destinasjonen har egne vilkår og personvernregler.</dd>
+  </dl>
+  <p class="todo">FYLL INN: Korrekte juridiske leverandørnavn og roller, databehandleravtaler, underleverandører, behandlingsland, OpenAI-prosjektets faktiske datakontroller og lagringstid, hostinglogger og e-postrutiner. Avklar overføringer utenfor EØS, rettslig overføringsgrunnlag og hvordan informasjon om garantier kan innhentes. Ikke lov umiddelbar sletting, EU-lagring eller null modelltrening uten kontroll.</p>
+  <h2>5. Formål og behandlingsgrunnlag</h2>
+  <p>Formålene er å tilby planleggingsfunksjonene, behandle eventuelle frivillige bildeforespørsler, sikre driften og svare på support.</p>
+  <p class="todo">FYLL INN: Konkrete GDPR-behandlingsgrunnlag per formål, eventuell vurdering av særlige kategorier opplysninger, og forholdet mellom tillatelse i appen og rettslig samtykke. Oppgi om opplysninger er nødvendige eller valgfrie og konsekvensen av å la være. Få juridisk vurdering ved behov; ikke bruk «samtykke til alt» som standardgrunnlag.</p>
+  <h2>6. Lagring og sletting</h2>
+  <p>Du kan nullstille appens oversikt under <strong>Baby → Slett alle lokale data</strong>. Dette nullstiller appdata på enheten, men sletter ikke automatisk eksporterte kopier, enhetssikkerhetskopier, e-post eller eventuelle leverandørlogger.</p>
+  <p class="todo">FYLL INN: Verifisert sletting av alle lagringsversjoner og bildebuffer i appen, konkret oppbevaringstid for hosting-/AI-logger og support, samt hvordan eventuelle opplysninger hos leverandører kan slettes og hvilke begrensninger som gjelder. Ikke lov full sletting før funksjonen er testet.</p>
+  <h2>7. Dine rettigheter</h2>
+  <p>Avhengig av behandlingen kan du ha rett til innsyn, retting, sletting, begrensning, dataportabilitet og å protestere. Dersom behandlingen bygger på samtykke, kan dette trekkes tilbake uten å påvirke lovligheten av tidligere behandling. Kontakt oss på e-post. Du kan klage til <a href="https://www.datatilsynet.no/">Datatilsynet</a>.</p>
+  <p>Vi kan ikke hente ut en lokalt lagret oversikt bare ut fra navnet ditt. Du kan selv eksportere den i appen. Ikke send hele kopien til support med mindre det er særskilt nødvendig og avtalt på en forsvarlig måte.</p>
+  <h2>8. Barn, reklame og endringer</h2>
+  <p>Appen er rettet mot voksne, ikke mot barn som brukere. Opplysninger om barn skal begrenses til det som er nødvendig for den praktiske oversikten.</p>
+  <p class="todo">BEKREFT FOR UTGIVELSEN: Ingen annonser, annonseidentifikatorer, sporing eller analyse utover det som beskrives over. Avhengigheter alene beviser ikke hvilken innsamling som skjer. Oppdater erklæringen og App Store-opplysningene hvis funksjoner eller databehandling endres. Beskriv hvordan vesentlige endringer varsles.</p>
+  <p>Referanse for leverandørkontroll: <a href="https://developers.openai.com/api/docs/guides/your-data">OpenAI – Data controls</a>.</p>
+  <p><a href="support.html">Til support</a></p>
+</main>
+</body>
+</html>

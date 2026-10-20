@@ -1,0 +1,86 @@
+{
+  "locale": "nb-NO",
+  "preparedAt": "2026-10-20",
+  "sourceRevision": "2fe9842",
+  "status": "Tekstutkast kontrollert mot lokal kildekode. Ikke en bekreftelse på at TestFlight-builden er klar for innsending.",
+  "name": "BabyKlar: Utstyr til baby",
+  "subtitle": "Sjekklister, klær og fødebag",
+  "promotionalText": "Hva har dere, hva mangler, og hva kan vente? Samle babyutstyr, klær og sykehusbag i én rolig oversikt. Gjør plass til forventningene, ikke flere handlelister.",
+  "description": "Litt mer oversikt. Litt mindre stress før babyen kommer.\n\nDet er mye å tenke på når familien skal bli større. BabyKlar hjelper dere å sortere det praktiske: Hva har dere allerede? Hva mangler? Og hva kan fint vente?\n\nFÅ OVERSIKT OVER BABYUTSTYRET\nSamle klær, soveutstyr, stelleutstyr og andre babyting på ett sted. Marker «Har», «Mangler» eller «Trenger ikke», og legg til egne ting. Arvet, lånt eller kjøpt: Det dere allerede har, teller like mye.\n\nTA DET VIKTIGSTE FØRST\nFå en plan med oppgaver og sjekklister som tilpasses situasjonen deres og tiden fram mot termin. Skill mellom det viktige, det som kan vente, og det som er helt valgfritt.\n\nHOLD ORDEN PÅ SMÅ KLÆR\nSe hva dere har registrert i hver størrelse. Garderoben samler antall og veiledende mengder, så det blir enklere å se hva som faktisk mangler.\n\nPAKK SYKEHUSBAGEN\nBruk pakkelisten for mor, baby, partner og det praktiske. I pakkemodus tar dere én ting om gangen og krysser av underveis.\n\nDERE BESTEMMER\nBabyKlar skal hjelpe dere å kjøpe smartere, ikke mer. Forslagene er et utgangspunkt, ikke en fasit. «Trenger ikke» er et like godt valg som «Har».\n\nENKELT Å KOMME I GANG\nIngen konto å opprette. Oversikten lagres på enheten, og dere kan eksportere en sikkerhetskopi før dere bytter telefon. Appen er gratis, uten abonnement eller kjøp i appen.\n\nBabyKlar er et verktøy for praktisk planlegging, ikke en medisinsk tjeneste. Følg råd fra helsepersonell og produsentenes bruksanvisninger om helse og sikker bruk av utstyr.",
+  "keywords": "gravid,termin,nyfødt,barsel,foreldre,spedbarn,pakkeliste,garderobe,fødsel,planlegger",
+  "copyright": "2026 Snorre Olimstad",
+  "primaryCategory": "Lifestyle",
+  "secondaryCategory": "Productivity",
+  "price": "Free",
+  "territories": ["Norway"],
+  "primaryLanguageInAppStoreConnect": "Norwegian",
+  "supportURL": null,
+  "privacyPolicyURL": null,
+  "marketingURL": null,
+  "version": {
+    "localSource": "1.0.0",
+    "submittedVersion": null,
+    "plannedStoreVersion": "1.0.0",
+    "note": "Neste appbuild er konfigurert som 1.0.0 etter utgivers ønske. Allerede opplastet build 4 rapporterer fortsatt 0.1.0 og kan ikke omdøpes. En ny build må bygges og lastes opp for at binærfilen også skal rapportere 1.0.0. Ingenting er sendt til review."
+  },
+  "reviewContact": {
+    "firstName": "Snorre",
+    "lastName": "Olimstad",
+    "email": "snorre.olimstad@gmail.com",
+    "phone": null,
+    "signInRequired": false,
+    "phoneConfiguredPrivatelyInAppStoreConnect": true
+  },
+  "appStoreConnectDraft": {
+    "updatedAt": "2026-10-20",
+    "url": "https://appstoreconnect.apple.com/apps/6818113966/distribution/ios/version/inflight",
+    "storeVersion": "1.0.0",
+    "attachedBuild": {"number": "4", "binaryVersion": "0.1.0"},
+    "primaryLanguage": "Norwegian",
+    "localizations": ["Norwegian"],
+    "releaseMode": "Manual",
+    "price": "NOK 0.00",
+    "availableCountries": ["Norway"],
+    "macAvailability": false,
+    "visionProAvailability": false,
+    "status": "Prepare for Submission",
+    "addForReviewResult": "Unable to Add for Review",
+    "submitted": false,
+    "reviewNotesStatus": "Explicitly marked as a draft with unresolved release limitations. Must be finalized after the corrected build is verified.",
+    "appleValidationBlockers": [
+      "Screenshot for 13-inch iPad displays",
+      "Screenshot for iPhone with Dynamic Island (medium display)",
+      "Content Rights Information",
+      "App Privacy declarations",
+      "Required age-rating questionnaire",
+      "Norwegian Support URL"
+    ],
+    "additionalKnownRequirements": [
+      "Live final privacy-policy URL",
+      "Corrected and verified release build",
+      "New binary upload for the binary itself to report version 1.0.0"
+    ]
+  },
+  "whatsNew": {
+    "requiredForInitialRelease": false,
+    "optionalText": "Velkommen til BabyKlar. Få oversikt over babyutstyr, klær og sykehusbag, og ta forberedelsene ett steg om gangen."
+  },
+  "excludedClaims": [
+    "Delbar nettønskeliste og gavebestilling",
+    "Reservasjon av gaver på tvers av enheter",
+    "Partnersynk eller automatisk skylagring",
+    "Prissammenligning, budsjett og produktfavoritter",
+    "Varsler og prediksjon av neste klesstørrelse",
+    "Ingen deling med tredjepart",
+    "Medisinsk kvalitetssikret eller garantert trygg",
+    "AI-bildegjenkjenning som garantert tilgjengelig lanseringsfunksjon"
+  ],
+  "releaseGates": [
+    "Rett eller fjern uferdig deling i hele brukerreisen, ikke bare i butikkteksten.",
+    "Rett personverninformasjonen og innhent eksplisitt tillatelse før tredjeparts-AI mottar data, eller fjern skanningen fra utgivelsen.",
+    "Publiser ferdig personvernerklæring og supportside på egne, fungerende HTTPS-adresser.",
+    "Gå gjennom råd om spedbarnssikkerhet, særlig teksten om rengjøring av flasker.",
+    "Bekreft faktisk App Privacy, aldersmerking, SDK, build, iPad-støtte og alle tester i innsendingspakken.",
+    "Erstatt alle webforhåndsvisninger med autentiske skjermbilder fra innsendingsbuilden."
+  ]
+}

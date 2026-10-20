@@ -1,0 +1,29 @@
+{
+  "preparedAt": "2026-10-20",
+  "sourceRevision": "2fe9842",
+  "source": "Local Expo web app rendered in an isolated headless Microsoft Edge (Chromium) context at localhost:8091",
+  "viewport": {"width":440,"height":956},
+  "fixture": "Fiktiv lokal familie uten navn. Appens katalog, noen ting satt til Har, Selskapsantrekk satt til Trenger ikke, klesstørrelse 56. Ingen bilder eller data sendt til AI.",
+  "webReferences": [
+    "web-01-hjem.png",
+    "web-02-ting.png",
+    "web-03-plan.png",
+    "web-04-garderobe.png",
+    "web-05-pakking.png",
+    "web-06-valgfritt.png"
+  ],
+  "artwork": [
+    "UTKAST-01-hjem.png",
+    "UTKAST-02-ting.png",
+    "UTKAST-03-plan.png",
+    "UTKAST-04-garderobe.png",
+    "UTKAST-05-pakking.png",
+    "UTKAST-06-valgfritt.png"
+  ],
+  "artworkSize": {"width":1320,"height":2868},
+  "contactSheet": "oversikt-utkast.png",
+  "captureCorrection": "Earlier integrated-browser captures had a viewport mismatch and white margins. All six were replaced with fixed-viewport captures in a separate browser context.",
+  "notForSubmission": true,
+  "reason": "Webreferanser, ikke autentiske iOS-skjermbilder. TestFlight var ikke tilgjengelig fra dette Windows-miljøet. Utkastene inneholder synlig merking.",
+  "nativeCaptureRequired": "Ta samme seks skjermbilder i den ferdige iPhone-builden. Bruk egne iPad-opptak hvis supportsTablet beholdes. Importer i skjermbilder.html og eksporter bekreftet artwork."
+}
