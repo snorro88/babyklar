@@ -1,0 +1,38 @@
+appId: no.babyklar.app
+name: Plan and wardrobe reflect local choices
+---
+- runFlow: ../helpers/onboarding.yml
+- tapOn: 'Plan.*'
+- assertVisible: Deres plan
+# Task rows expose their texts joined as one label, e.g. "Vask babyklær, Bør være gjort …".
+- tapOn: 'Vask babyklær, .*'
+- assertVisible: '.*Vask babyklær, Ferdig'
+- waitForAnimationToEnd
+- takeScreenshot: 03-plan
+- runFlow:
+    file: ../helpers/open-link.yml
+    env:
+      LINK: babyklar://items
+- tapOn: 'Søk etter.*'
+- inputText: Body
+# hideKeyboard can't dismiss this input; Return blurs a single-line TextInput.
+- pressKey: Enter
+- tapOn: 'Body str\. 56, mangler'
+- assertVisible: 'Body str\. 56, har'
+- runFlow:
+    file: ../helpers/open-link.yml
+    env:
+      LINK: babyklar://wardrobe
+- assertVisible: Smart garderobe
+- tapOn: 'Str\. 56'
+- tapOn: 'Trykk her for å sette str\. 56.*'
+- assertVisible: 'Barnet starter i str\. 56\.'
+- waitForAnimationToEnd
+- takeScreenshot: 04-garderobe
+- stopApp
+- launchApp
+- runFlow:
+    file: ../helpers/open-link.yml
+    env:
+      LINK: babyklar://wardrobe
+- assertVisible: 'Barnet starter i str\. 56\.'

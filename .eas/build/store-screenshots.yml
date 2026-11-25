@@ -1,0 +1,28 @@
+build:
+  name: Native App Store screenshots
+  steps:
+    - eas/checkout
+    - eas/install_node_modules
+    - eas/prebuild
+    # The standard simulator build omits remote iOS build-number configuration.
+    - run:
+        name: Set generated simulator build number
+        working_directory: ./ios
+        command: xcrun agvtool new-version -all 5
+    - run:
+        name: Install pods
+        working_directory: ./ios
+        command: pod install
+    - eas/generate_gymfile_from_template
+    - eas/run_fastlane
+    - eas/find_and_upload_build_artifacts
+    - eas/install_maestro
+    - run:
+        name: Capture and verify iPhone and iPad flows
+        command: node .maestro/capture-ios.mjs
+    - eas/upload_artifact:
+        name: Upload native screenshots and test evidence
+        if: ${ always() }
+        inputs:
+          type: build-artifact
+          path: .maestro/artifacts

@@ -1,0 +1,15 @@
+appId: no.babyklar.app
+---
+- openLink: ${LINK}
+- runFlow:
+    when:
+      visible: 'Open in .*BabyKlar.*'
+    commands:
+      - tapOn: Open
+- runFlow:
+    when:
+      visible: 'Åpne i .*BabyKlar.*'
+    commands:
+      - tapOn: Åpne
+# A tap that fires while the new screen is still mounting is lost.
+- waitForAnimationToEnd

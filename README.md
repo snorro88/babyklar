@@ -36,6 +36,75 @@ nye builden i App Store-utkastet. Eksisterende opplastede binærfiler kan ikke
 omdøpes. Et nytt versjonsnummer løser ikke de kjente lanseringsmanglene som er
 beskrevet i [innsendingspakken](app-store/innsendingspakke.html).
 
+## Support og personvern på nett
+
+[Supportsiden](public/support.html) og [personvernsiden](public/personvern.html)
+kopieres automatisk med når nettstedet eksporteres med
+`npx expo export --platform web`. Begge er publisert under det varige aliaset
+`support`, som nå peker på deploymenten `nmit7ndzfw`:
+[BabyKlar support](https://babyklar--support.expo.app/support.html) ·
+[BabyKlar personvern](https://babyklar--support.expo.app/personvern.html).
+Aliaset hindrer at forhåndsvisningen utløper etter 90 dager og er separat fra
+produksjon; API-adressen som er brukt av de installerte appene er ikke endret.
+Bruk `npx eas-cli@27.2.0 deploy --non-interactive --alias support` etter en ny
+`expo export` for å oppdatere begge sidene under samme aliaset. Verifisert
+30. oktober 2026: begge adressene svarer HTTP 200. Alias-tilordning kan ta opp
+til ca. ett minutt å spre seg; test på nytt før du konkluderer at noe er feil.
+
+Personvernsiden under `public/` er en ryddet, publiseringsklar versjon av det
+tidligere utkastet i [app-store/nettside/personvern.html](app-store/nettside/personvern.html)
+(beholdt som internt kontrollnotat). Den fjerner redaksjonelle advarsler/TODO-er
+og fyller behandlingsgrunnlag med et forsvarlig standardsvar for en gratis app
+uten konto, men endrer ikke de underliggende, ennå urettede funnene i
+[innsendingspakken](app-store/innsendingspakke.html) — blant annet at
+[Baby-skjermen](<app/(tabs)/baby.tsx>) fortsatt påstår «ingen deling med
+tredjepart» mens build 5 faktisk sender bilder til OpenAI uten en egen
+tillatelsesdialog. En nettside endrer ikke tillatelsesflyten i en allerede
+opplastet iOS-build.
+
+## Native App Store-skjermbilder
+
+Profilen `store-screenshots` bygger en simulatorvariant av 1.0.0 uten å øke
+buildnummeret eller laste opp til TestFlight. Den kjører tre Maestro-flyter på
+en medium iPhone og en 13-tommers iPad i samme macOS-build. Bare fiktive, lokale
+testdata brukes; bildegjenkjenning og OpenAI kalles ikke.
+Byggestegene setter eksplisitt buildnummer 5 i det genererte simulatorprosjektet:
+EAS sitt standardsteg for simulatorer utelater synkronisering av buildnummer.
+Derfor brukes Xcodes `agvtool new-version -all 5` før kompilering, uten å endre
+appkonfigurasjonen i kilderepositoriet. Den ferdige appens Info.plist kontrolleres.
+Appkilde, ressurser og avhengigheter skal være uendret fra `3643dc5`.
+
+Kontroller tilgjengelig byggekreditt før kjøring:
+
+```powershell
+npx --yes eas-cli@27.2.0 account:usage snorre.olimstad --non-interactive
+npx --yes eas-cli@27.2.0 build --platform ios --profile store-screenshots --non-interactive
+```
+
+Dette bruker dokumenterte custom-build-steg, ikke separat fakturerte
+Maestro-jobber i EAS Workflows. App Store-utkastets build 5 endres ikke.
+Jobben feiler ved testfeil, manglende bilder eller feil pikselmål.
+
+**Verifisert 30. oktober 2026** (EAS-build `77e24352-ce68-4412-a942-498e3045aa6c`):
+3/3 flyter bestod på iPhone 16 Pro og iPad Pro 13-inch (M5), iOS 26.5-simulator,
+Xcode 26.6. Seks PNG-er per enhet ligger i
+[app-store/bilder/native/](app-store/bilder/native/): iPhone 1206 × 2622 og
+iPad 2064 × 2752, RGB, kontrollert visuelt, med
+[bevisfil](app-store/bilder/native/capture-evidence.json).
+
+Erfaringer som flytene og profilen nå tar hensyn til:
+
+- Profilen er låst til `macos-tahoe-26.5-xcode-26.6`, samme image som build 5.
+  Med iOS 27-SDK krasjer appen ved oppstart («UIScene life cycle is required»),
+  og skriptet stopper hvis `DTXcode` ikke er 26.x.
+- EAS-arbeiderne har ingen Simulator.app; `simctl boot` + `bootstatus` holder.
+- JS-splashen dekker skjermen ~2,5 s og sluker trykk. Flytene gjentar første trykk
+  til skjermen faktisk endrer seg.
+- Knapper og rader uten egen `accessibilityLabel` eksponerer
+  «ikon, tekst, …» som én etikett, og Maestro matcher tekst uten hensyn til
+  store/små bokstaver. Velgerne er skrevet for dette.
+- `hideKeyboard` virker ikke på søkefeltet; Return lukker tastaturet.
+
 ## Hva som er med i demoen
 
 | Skjerm | Fil | Innhold |

@@ -1,0 +1,31 @@
+appId: no.babyklar.app
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: Fortsett
+    timeout: 30000
+# The JS splash overlay swallows taps for ~2.5 s after launch; retry until step 2 appears.
+- repeat:
+    times: 10
+    while:
+      notVisible: 'Hva passer best\?'
+    commands:
+      - tapOn: Fortsett
+- tapOn: Fortsett
+- extendedWaitUntil:
+    visible: 'Når er termin\?'
+    timeout: 10000
+- tapOn: Fortsett
+- extendedWaitUntil:
+    visible: 'Har dere.*'
+    timeout: 10000
+- tapOn: Fortsett
+- extendedWaitUntil:
+    visible: 'Hva vil dere ha mest hjelp med\?'
+    timeout: 10000
+# Buttons with icons expose "<glyph>, <label>" to accessibility.
+- tapOn: '.*Kom i gang'
+- extendedWaitUntil:
+    visible: Snart kommer babyen
+    timeout: 30000

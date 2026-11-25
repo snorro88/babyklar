@@ -15,6 +15,23 @@
       "env": {
         "EXPO_PUBLIC_API_URL": "https://babyklar.expo.app"
       }
+    },
+    "store-screenshots": {
+      "extends": "production",
+      "config": "store-screenshots.yml",
+      "distribution": "internal",
+      "environment": "preview",
+      "autoIncrement": false,
+      "withoutCredentials": true,
+      "env": {
+        "MAESTRO_CLI_NO_ANALYTICS": "true",
+        "MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED": "true"
+      },
+      "ios": {
+        "simulator": true,
+        "resourceClass": "medium",
+        "image": "macos-tahoe-26.5-xcode-26.6"
+      }
     }
   },
   "submit": {

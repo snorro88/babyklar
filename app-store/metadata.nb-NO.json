@@ -14,14 +14,14 @@
   "price": "Free",
   "territories": ["Norway"],
   "primaryLanguageInAppStoreConnect": "Norwegian",
-  "supportURL": null,
+  "supportURL": "https://babyklar--support.expo.app/support.html",
   "privacyPolicyURL": null,
   "marketingURL": null,
   "version": {
     "localSource": "1.0.0",
     "submittedVersion": null,
     "plannedStoreVersion": "1.0.0",
-    "note": "Build 5 (1.0.0) er bygget, lastet opp og ferdig prosessert av Apple. Den er knyttet til den eksisterende interne TestFlight-gruppen Team (Expo). App Store-utkastet har fortsatt build 4 (0.1.0) valgt. Den nye builden er kun til testing; lanseringsmanglene er ikke rettet, og ingenting er sendt til offentlig App Review."
+    "note": "Build 5 (1.0.0) er bygget, lastet opp og ferdig prosessert av Apple. Den er knyttet til den eksisterende interne TestFlight-gruppen Team (Expo) og er valgt og lagret i App Store-utkastet. Support URL, innholdsrettigheter og aldersspørreskjema er lagret og kontrollert. Add for Review blokkeres fortsatt av manglende native skjermbilder, App Privacy og personvern-URL. Lanseringsmanglene er ikke rettet, og ingenting er sendt til offentlig App Review."
   },
   "testFlight": {
     "verifiedAt": "2026-10-20",
@@ -44,11 +44,37 @@
     "signInRequired": false,
     "phoneConfiguredPrivatelyInAppStoreConnect": true
   },
+  "nativeCapture": {
+    "checkedAt": "2026-10-21",
+    "status": "Blocked; no native screenshots verified or uploaded",
+    "sourceMatchesBuild5": true,
+    "uiTestsExecuted": 0,
+    "screenshotsVerified": 0,
+    "attempts": [
+      {
+        "buildId": "f1ab2406-9b0e-485d-a794-1eda01079667",
+        "result": "Failed before UI tests: default simulator build number was 1, not 5"
+      },
+      {
+        "buildId": "838f8fdb-7aae-4e0e-a015-e5175eb75890",
+        "result": "Failed before compilation: custom-step target_names JSON input rejected"
+      },
+      {
+        "buildId": "6f6a82fb-8462-4e8c-9197-63a1feb9391d",
+        "result": "Compiled and verified 1.0.0 (5); simulator creation failed with Incompatible device for iPhone 16 Pro / iOS 27.1"
+      }
+    ],
+    "localCompatibilityTests": {"passed": 5, "failed": 0, "skipped": 0},
+    "nextCorrection": "Select a runtime supporting both required devices; locally tested, not yet run in the cloud",
+    "automaticRetriesStopped": true,
+    "remainingIncludedBuildCreditUSD": 37,
+    "estimatedUsageOverageUSD": 0
+  },
   "appStoreConnectDraft": {
     "updatedAt": "2026-10-20",
     "url": "https://appstoreconnect.apple.com/apps/6818113966/distribution/ios/version/inflight",
     "storeVersion": "1.0.0",
-    "attachedBuild": {"number": "4", "binaryVersion": "0.1.0"},
+    "attachedBuild": {"number": "5", "binaryVersion": "1.0.0"},
     "primaryLanguage": "Norwegian",
     "localizations": ["Norwegian"],
     "releaseMode": "Manual",
@@ -56,22 +82,28 @@
     "availableCountries": ["Norway"],
     "macAvailability": false,
     "visionProAvailability": false,
+    "contentRights": "No third-party content, as explicitly confirmed by the publisher",
+    "ageRating": {
+      "calculated": "13+",
+      "olderOperatingSystems": "Global 12+ with regional exceptions",
+      "medicalOrTreatmentInformation": "Infrequent",
+      "healthOrWellnessTopics": true,
+      "manualOverride": false
+    },
     "status": "Prepare for Submission",
+    "savedSupportURL": "https://babyklar--support20261020.expo.app/support.html",
+    "supportURLUpdatePending": true,
     "addForReviewResult": "Unable to Add for Review",
     "submitted": false,
     "reviewNotesStatus": "Explicitly marked as a draft with unresolved release limitations. Must be finalized after the corrected build is verified.",
     "appleValidationBlockers": [
       "Screenshot for 13-inch iPad displays",
       "Screenshot for iPhone with Dynamic Island (medium display)",
-      "Content Rights Information",
       "App Privacy declarations",
-      "Required age-rating questionnaire",
-      "Norwegian Support URL"
+      "Privacy Policy URL in App Privacy"
     ],
     "additionalKnownRequirements": [
-      "Live final privacy-policy URL",
-      "Corrected and verified release build",
-      "Select the final verified release build in the App Store draft after native testing and release fixes"
+      "Corrected and verified release build"
     ]
   },
   "whatsNew": {
@@ -91,7 +123,7 @@
   "releaseGates": [
     "Rett eller fjern uferdig deling i hele brukerreisen, ikke bare i butikkteksten.",
     "Rett personverninformasjonen og innhent eksplisitt tillatelse før tredjeparts-AI mottar data, eller fjern skanningen fra utgivelsen.",
-    "Publiser ferdig personvernerklæring og supportside på egne, fungerende HTTPS-adresser.",
+    "Ferdigstill og publiser en korrekt personvernerklæring. Supportsiden er publisert og lagret hos Apple.",
     "Gå gjennom råd om spedbarnssikkerhet, særlig teksten om rengjøring av flasker.",
     "Bekreft faktisk App Privacy, aldersmerking, SDK, build, iPad-støtte og alle tester i innsendingspakken.",
     "Erstatt alle webforhåndsvisninger med autentiske skjermbilder fra innsendingsbuilden."

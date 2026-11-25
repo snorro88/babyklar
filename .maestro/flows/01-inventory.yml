@@ -1,0 +1,23 @@
+appId: no.babyklar.app
+name: Inventory ownership survives relaunch
+---
+- runFlow: ../helpers/onboarding.yml
+- tapOn: 'Ting.*'
+- assertVisible: Bedside crib, mangler
+- tapOn: Bedside crib, mangler
+- tapOn: Madrass, mangler
+- tapOn: Laken, mangler
+- assertVisible: Bedside crib, har
+- waitForAnimationToEnd
+- takeScreenshot: 02-ting
+- stopApp
+- launchApp
+- assertVisible: Snart kommer babyen
+- runFlow: ../helpers/wait-for-splash.yml
+- assertVisible: Bedside crib, har
+- assertVisible: Madrass, har
+- assertVisible: Laken, har
+- tapOn: 'Hjem.*'
+- assertVisible: Snart kommer babyen
+- waitForAnimationToEnd
+- takeScreenshot: 01-hjem

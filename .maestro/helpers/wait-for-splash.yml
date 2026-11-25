@@ -1,0 +1,9 @@
+appId: no.babyklar.app
+---
+# The JS splash overlay swallows taps for ~2.5 s after launch; retry an idempotent tab switch until it registers.
+- repeat:
+    times: 10
+    while:
+      notVisible: 'Søk etter.*'
+    commands:
+      - tapOn: 'Ting.*'

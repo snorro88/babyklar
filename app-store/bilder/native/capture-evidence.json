@@ -1,0 +1,105 @@
+{
+  "appVersion": "1.0.0",
+  "buildNumber": "5",
+  "xcode": "2660",
+  "sdk": "iphonesimulator26.5",
+  "sourceCommit": "3643dc597fcfd075e7dda17b632165e43cb032ab",
+  "captureBuildId": "77e24352-ce68-4412-a942-498e3045aa6c",
+  "gitCommit": "4f3c3f66a9330351911029bfe52c6b73f1009cc5",
+  "runtime": "26.5",
+  "generatedAt": "2026-10-30T14:29:10.339Z",
+  "devices": [
+    {
+      "kind": "iphone",
+      "model": "iPhone 16 Pro",
+      "testExitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "screenshots": [
+        {
+          "name": "01-hjem",
+          "width": 1206,
+          "height": 2622,
+          "sha256": "f376cd222d9a9bd290a64ea8a5275f71092e5fb95ad78b077dd24c22094c4796"
+        },
+        {
+          "name": "02-ting",
+          "width": 1206,
+          "height": 2622,
+          "sha256": "e8f31d7988b9ffcb3fece22a1f1161412fb3be2b17d18b906492e6f3f28ff201"
+        },
+        {
+          "name": "03-plan",
+          "width": 1206,
+          "height": 2622,
+          "sha256": "0c20ae1486dc1d67795d12e8360a217c5105b404fdbe5497339005483261739d"
+        },
+        {
+          "name": "04-garderobe",
+          "width": 1206,
+          "height": 2622,
+          "sha256": "17f4f96bac0d4fcc8ea91565248b83c842414ceb5bdbe6b0cd7dc3490c232238"
+        },
+        {
+          "name": "05-pakking",
+          "width": 1206,
+          "height": 2622,
+          "sha256": "d839d8e71fce9704319c31f5b72a24bc6945553aec47a7481db6d9dc5ea01194"
+        },
+        {
+          "name": "06-valgfritt",
+          "width": 1206,
+          "height": 2622,
+          "sha256": "ed246b576557560a79f3a391b35b92d04b0f7e348eb2ceed9676c8b356f8913c"
+        }
+      ]
+    },
+    {
+      "kind": "ipad",
+      "model": "iPad Pro 13-inch (M5) (16GB)",
+      "testExitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "screenshots": [
+        {
+          "name": "01-hjem",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "4c0274ee7a71c5f4dda321fcde9c3ca8bc3cc5f95750bd93d3c4df424720777d"
+        },
+        {
+          "name": "02-ting",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "f6fad8147732491baf04fbf17d24caee2b2e267e38ca885caa9f2c4bc841bf4a"
+        },
+        {
+          "name": "03-plan",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "593e3754d35cc8e5211ffe8e23419fc31ed300116e304a4043ca97b4821d454e"
+        },
+        {
+          "name": "04-garderobe",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "1f8561a8c9d5585c16401ec978ec8ca463843a0130930cb445ed5f0da19a7687"
+        },
+        {
+          "name": "05-pakking",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "f2291bdfa29eb94434d8b94b65473fb4ff5c21b9674b6260fb641793f1d0d8a7"
+        },
+        {
+          "name": "06-valgfritt",
+          "width": 2064,
+          "height": 2752,
+          "sha256": "7b81b5afa07e74d5edb76274f703dbe6e3bacf4bd52ce4add308468f551fcbc0"
+        }
+      ]
+    }
+  ]
+}

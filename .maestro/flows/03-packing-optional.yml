@@ -1,0 +1,63 @@
+appId: no.babyklar.app
+name: Packed and unnecessary items survive relaunch
+---
+- runFlow: ../helpers/onboarding.yml
+- runFlow:
+    file: ../helpers/open-link.yml
+    env:
+      LINK: babyklar://hospital-bag
+- assertVisible: Sykehusbag
+# Buttons with icons expose "<glyph>, <label>" to accessibility.
+- tapOn: '.*Start pakkemodus'
+- assertVisible: 'Bag: klær til mor'
+- waitForAnimationToEnd
+# Maestro matches case-insensitively; '.*, ' keeps this off the "0 pakket" counter.
+- repeat:
+    times: 3
+    while:
+      notVisible: 1 pakket
+    commands:
+      - tapOn: '.*, Pakket'
+- assertVisible: 1 pakket
+- waitForAnimationToEnd
+- takeScreenshot: 05-pakking
+- stopApp
+- launchApp
+- runFlow: ../helpers/wait-for-splash.yml
+- runFlow:
+    file: ../helpers/open-link.yml
+    env:
+      LINK: babyklar://hospital-bag
+- assertVisible: 'Bag: klær til mor, har'
+- runFlow:
+    file: ../helpers/open-link.yml
+    env:
+      LINK: babyklar://items
+- tapOn: 'Søk etter.*'
+- inputText: Selskapsantrekk
+# hideKeyboard can't dismiss this input; Return blurs a single-line TextInput.
+- pressKey: Enter
+# Row body label is "Selskapsantrekk, <icon>, Klær, Mangler"; a looser pattern also hits the search field's text.
+- tapOn:
+    text: 'Selskapsantrekk, .+, Mangler'
+    rightOf: Selskapsantrekk, mangler
+- tapOn: Trenger ikke
+- waitForAnimationToEnd
+# The software keyboard's "return" key is only in the hierarchy while it covers the screen.
+- extendedWaitUntil:
+    notVisible: return
+    timeout: 5000
+- takeScreenshot: 06-valgfritt
+- stopApp
+- launchApp
+- runFlow: ../helpers/wait-for-splash.yml
+- runFlow:
+    file: ../helpers/open-link.yml
+    env:
+      LINK: babyklar://items
+- tapOn: 'Søk etter.*'
+- inputText: Selskapsantrekk
+# hideKeyboard can't dismiss this input; Return blurs a single-line TextInput.
+- pressKey: Enter
+# The collapsed row exposes name and status as one label.
+- assertVisible: 'Selskapsantrekk, .*Trenger ikke'
