@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { createContext, useContext, useEffect, useMemo, useReducer } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useReducer, useRef } from 'react';
 
 import { CATALOG, TASKS, WARDROBE, WISHES } from '@/data/catalog';
 import { isCarSeatTask, personalizeItems, personalizeTasks } from '@/lib/plan';
+import { deleteShare, GUEST_RESERVED, shareSignature, ShareGoneError, syncShare } from '@/lib/share';
 import type {
   AppState,
   CategoryId,
@@ -14,6 +15,7 @@ import type {
   Status,
   Task,
   WishItem,
+  WishlistShare,
 } from '@/types';
 
 // v6 dropped the pre-filled example home from the default seed; older keys are left behind.
@@ -80,6 +82,8 @@ type Action =
   | { type: 'addWish'; wish: Omit<WishItem, 'id'> }
   | { type: 'toggleWishReserved'; id: string; by: string }
   | { type: 'removeWish'; id: string }
+  | { type: 'setShare'; share: WishlistShare | undefined }
+  | { type: 'applyReservations'; shareId: string; reserved: string[] }
   | { type: 'setHousehold'; patch: Partial<Household> }
   | { type: 'setDemoData'; on: boolean }
   | { type: 'reset' };
@@ -99,6 +103,13 @@ const LEGACY_STATUS: Record<string, Status> = {
 const SITUATIONS: Situation[] = ['first', 'has-child', 'born'];
 const FOCUS_AREAS: FocusArea[] = ['equipment', 'clothes', 'hospitalBag', 'wishlist', 'owned', 'tasks', 'budget'];
 const WISH_PRIORITIES: WishItem['priority'][] = ['high', 'medium', 'low'];
+
+const isShare = (v: unknown): v is WishlistShare =>
+  !!v &&
+  typeof v === 'object' &&
+  typeof (v as WishlistShare).id === 'string' &&
+  typeof (v as WishlistShare).key === 'string' &&
+  typeof (v as WishlistShare).url === 'string';
 
 const isValidItem = (i: Item) =>
   CATEGORY_IDS.includes(i.category) && PRIORITIES.includes(i.priority) && STATUSES.includes(i.status);
@@ -177,7 +188,7 @@ export function sanitizeState(raw: unknown): AppState | null {
       syncedWishes = ensureWish(syncedWishes, i.name, i.size);
     });
 
-  return { household, items, tasks, wishes: syncedWishes, wardrobe };
+  return { household, items, tasks, wishes: syncedWishes, wardrobe, share: isShare(r.share) ? r.share : undefined };
 }
 
 function reducer(state: AppState, action: Action): AppState {
@@ -187,7 +198,8 @@ function reducer(state: AppState, action: Action): AppState {
 
     case 'importState': {
       const clean = sanitizeState(action.raw);
-      return clean ?? state;
+      // A backup from before sharing keeps this phone's link; the imported wishes sync to it.
+      return clean ? { ...clean, share: clean.share ?? state.share } : state;
     }
 
     case 'completeOnboarding': {
@@ -261,6 +273,25 @@ function reducer(state: AppState, action: Action): AppState {
 
     case 'removeWish':
       return { ...state, wishes: state.wishes.filter((w) => w.id !== action.id) };
+
+    case 'setShare':
+      // Without a link there are no reservations from it either.
+      return action.share
+        ? { ...state, share: action.share }
+        : { ...state, share: undefined, wishes: state.wishes.map((w) => (w.reservedBy ? { ...w, reservedBy: undefined } : w)) };
+
+    case 'applyReservations': {
+      if (state.share?.id !== action.shareId) return state; // answer for a link that is gone
+      const reserved = new Set(action.reserved);
+      let changed = false;
+      const wishes = state.wishes.map((w) => {
+        const isReserved = reserved.has(w.id);
+        if (isReserved === !!w.reservedBy) return w;
+        changed = true;
+        return { ...w, reservedBy: isReserved ? GUEST_RESERVED : undefined };
+      });
+      return changed ? { ...state, wishes } : state;
+    }
 
     case 'setHousehold': {
       const household = { ...state.household, ...action.patch };
@@ -337,6 +368,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(state)).catch(() => {});
   }, [state, ready]);
 
+  useWishlistSync(state, dispatch, ready);
+
   const value = useMemo(() => ({ state, dispatch, ready }), [state, ready]);
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
@@ -345,4 +378,44 @@ export function useApp() {
   const ctx = useContext(AppContext);
   if (!ctx) throw new Error('useApp must be used within AppProvider');
   return ctx;
+}
+
+/**
+ * Keeps the shared wishlist on babyklar.app in step with the app: uploads changes
+ * guests can see (debounced), brings back which wishes are reserved, and deletes
+ * the shared list when the link is dropped (e.g. «Slett alle lokale data»).
+ */
+function useWishlistSync(state: AppState, dispatch: React.Dispatch<Action>, ready: boolean) {
+  const { share, wishes } = state;
+  const signature = useMemo(() => shareSignature(wishes), [wishes]);
+  const wishesRef = useRef(wishes);
+  wishesRef.current = wishes;
+  // `${share id}:${signature}` last uploaded, so returning reservations don't trigger another upload.
+  const sentRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!ready || !share) return;
+    const sent = `${share.id}:${signature}`;
+    if (sentRef.current === sent) return;
+    const timer = setTimeout(() => {
+      syncShare(share, wishesRef.current)
+        .then((reserved) => {
+          sentRef.current = sent;
+          dispatch({ type: 'applyReservations', shareId: share.id, reserved });
+        })
+        .catch((err) => {
+          // Offline or a server hiccup: the next change or visit to Ønsker tries again.
+          if (err instanceof ShareGoneError) dispatch({ type: 'setShare', share: undefined });
+        });
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [ready, share, signature, dispatch]);
+
+  const previousRef = useRef<WishlistShare | undefined>(undefined);
+  useEffect(() => {
+    if (!ready) return;
+    const previous = previousRef.current;
+    previousRef.current = share;
+    if (previous && previous.id !== share?.id) deleteShare(previous).catch(() => {});
+  }, [ready, share]);
 }

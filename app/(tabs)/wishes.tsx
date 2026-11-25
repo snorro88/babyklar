@@ -1,11 +1,14 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Modal, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useFocusEffect, useRouter } from 'expo-router';
+import * as WebBrowser from 'expo-web-browser';
+import React, { useCallback, useState } from 'react';
+import { Linking, Modal, Platform, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Button, Card, Chip, Empty, HomeButton, Note, Pill, SectionTitle } from '@/components/ui';
 import { STATUS_LABEL } from '@/data/catalog';
+import { confirm, notify } from '@/lib/dialog';
+import { createShare, deleteShare, fetchReservations, ShareGoneError, WEB_URL } from '@/lib/share';
 import { useApp } from '@/state/store';
 import { colors, radius, spacing, type } from '@/theme';
 import type { Status, WishItem } from '@/types';
@@ -19,7 +22,26 @@ const PRIORITIES: { id: WishItem['priority']; label: string; tint: string; soft:
 /** Grunner til å fjerne noe fra ønskelista – uten «al Ønsker», som ville lagt tingen tilbake. */
 const REMOVE_REASONS: Status[] = ['have', 'missing', 'not-needed'];
 
-const SHARE_URL = 'https://babyklar.no/o/demo-4f2a';
+/** In-app browser on the phone (it has its own share / open-in-Safari controls); a new tab on web. */
+async function openPage(url: string) {
+  try {
+    if (Platform.OS === 'web') {
+      await Linking.openURL(url);
+      return;
+    }
+    await WebBrowser.openBrowserAsync(url, {
+      toolbarColor: colors.surface,
+      controlsColor: colors.primary,
+      dismissButtonStyle: 'done',
+      presentationStyle: WebBrowser.WebBrowserPresentationStyle.PAGE_SHEET,
+    });
+  } catch {
+    notify('Kunne ikke åpne siden', url);
+  }
+}
+
+const shareLink = (url: string) =>
+  Share.share({ message: `Her er ønskelisten til babyen vår. Reserver det du vil gi: ${url}` }).catch(() => {});
 
 export default function Wishes() {
   const router = useRouter();
@@ -31,6 +53,25 @@ export default function Wishes() {
   const [usedOk, setUsedOk] = useState(true);
   const [removing, setRemoving] = useState<WishItem | null>(null);
   const [reason, setReason] = useState<Status | null>(null);
+  const [busy, setBusy] = useState<'create' | 'stop' | null>(null);
+  const [shareError, setShareError] = useState(false);
+  const link = state.share;
+
+  // Fresh reservations every time the tab is opened.
+  useFocusEffect(
+    useCallback(() => {
+      if (!link) return;
+      let active = true;
+      fetchReservations(link)
+        .then((reserved) => active && dispatch({ type: 'applyReservations', shareId: link.id, reserved }))
+        .catch((err) => {
+          if (active && err instanceof ShareGoneError) dispatch({ type: 'setShare', share: undefined });
+        });
+      return () => {
+        active = false;
+      };
+    }, [link, dispatch]),
+  );
 
   const reserved = state.wishes.filter((w) => w.reservedBy).length;
   const removingMatch = removing
@@ -48,10 +89,38 @@ export default function Wishes() {
     setAdding(false);
   };
 
-  const share = () =>
-    Share.share({
-      message: `Vi har laget en ønskeliste til babyen i BabyKlar: ${SHARE_URL}`,
-    }).catch(() => {});
+  const createLink = async () => {
+    setBusy('create');
+    setShareError(false);
+    try {
+      const created = await createShare(state.wishes);
+      dispatch({ type: 'setShare', share: created });
+      shareLink(created.url);
+    } catch {
+      setShareError(true);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const stopSharing = async () => {
+    if (!link) return;
+    const ok = await confirm(
+      'Slutte å dele ønskelisten?',
+      'Lenken slutter å virke, og reservasjonene slettes. Ønskene blir liggende i appen.',
+      'Slutt å dele',
+    );
+    if (!ok) return;
+    setBusy('stop');
+    try {
+      await deleteShare(link);
+      dispatch({ type: 'setShare', share: undefined });
+    } catch {
+      notify('Fikk ikke slettet lenken', 'Sjekk at du er på nett, og prøv igjen.');
+    } finally {
+      setBusy(null);
+    }
+  };
 
   const closeRemove = () => {
     setRemoving(null);
@@ -82,22 +151,53 @@ export default function Wishes() {
             <View style={{ flex: 1 }}>
               <Text style={type.bodyStrong}>Delbar lenke</Text>
               <Text style={type.small} numberOfLines={1}>
-                {SHARE_URL}
+                {link ? link.url.replace(/^https?:\/\//, '') : 'Familien åpner lista i nettleseren'}
               </Text>
             </View>
           </View>
-          <View style={{ flexDirection: 'row', gap: spacing(2) }}>
-            <Button label="Del lenke" icon="share-variant" onPress={share} style={{ flex: 1 }} />
-            <Button
-              label="Forhåndsvis"
-              variant="ghost"
-              onPress={() => router.push('/shared-wishlist')}
-              style={{ flex: 1 }}
-            />
-          </View>
-          {reserved > 0 ? (
-            <Note tone="ok">{`${reserved} gave${reserved > 1 ? 'r er' : ' er'} reservert. Vi skjuler hvem – det skal være en overraskelse.`}</Note>
-          ) : null}
+          {link ? (
+            <>
+              <View style={{ flexDirection: 'row', gap: spacing(2) }}>
+                <Button label="Del lenke" icon="share-variant" onPress={() => shareLink(link.url)} style={{ flex: 1 }} />
+                <Button label="Åpne" variant="ghost" onPress={() => openPage(link.url)} style={{ flex: 1 }} />
+              </View>
+              {reserved > 0 ? (
+                <Note tone="ok">{`${reserved} gave${reserved > 1 ? 'r er' : ' er'} reservert. Vi skjuler hvem – det skal være en overraskelse.`}</Note>
+              ) : null}
+              <Pressable onPress={stopSharing} disabled={!!busy} hitSlop={8} style={{ alignSelf: 'flex-start' }}>
+                <Text style={styles.quietLink}>{busy === 'stop' ? 'Sletter lenken …' : 'Slutt å dele'}</Text>
+              </Pressable>
+            </>
+          ) : (
+            <>
+              <View style={{ flexDirection: 'row', gap: spacing(2) }}>
+                <Button
+                  label={busy === 'create' ? 'Lager lenke …' : 'Lag lenke'}
+                  icon="link-variant"
+                  onPress={createLink}
+                  disabled={!!busy || !state.wishes.length}
+                  style={{ flex: 1 }}
+                />
+                <Button
+                  label="Forhåndsvis"
+                  variant="ghost"
+                  onPress={() => router.push('/shared-wishlist')}
+                  style={{ flex: 1 }}
+                />
+              </View>
+              {shareError ? (
+                <Note tone="heads-up">Fikk ikke laget lenken. Sjekk at du er på nett, og prøv igjen.</Note>
+              ) : null}
+              <Text style={type.small}>
+                {state.wishes.length
+                  ? 'Ønskene lagres hos BabyKlar, slik at alle med lenken kan se dem. Navn, termin og resten av appen deles ikke.'
+                  : 'Legg inn minst ett ønske først.'}
+              </Text>
+              <Pressable onPress={() => openPage(`${WEB_URL}/personvern`)} hitSlop={8} style={{ alignSelf: 'flex-start' }}>
+                <Text style={styles.quietLink}>Les om personvern</Text>
+              </Pressable>
+            </>
+          )}
         </Card>
 
         <SectionTitle
@@ -210,6 +310,7 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: spacing(5), paddingTop: spacing(3), paddingBottom: spacing(12) },
   h1: { ...type.display, marginBottom: spacing(1) },
   link: { fontSize: 13, fontWeight: '700', color: colors.primary },
+  quietLink: { fontSize: 13, fontWeight: '600', color: colors.inkSoft, textDecorationLine: 'underline' },
   linkIcon: {
     width: 40,
     height: 40,

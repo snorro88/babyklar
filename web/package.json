@@ -1,0 +1,16 @@
+{
+  "name": "babyklar-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler d1 migrations apply babyklar --remote && wrangler deploy",
+    "types": "wrangler types",
+    "typecheck": "wrangler types && tsc --noEmit",
+    "db:migrate:local": "wrangler d1 migrations apply babyklar --local"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "wrangler": "^4.168.0"
+  }
+}

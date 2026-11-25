@@ -8,11 +8,13 @@ import { Button, Card, Note, Pill } from '@/components/ui';
 import { useApp } from '@/state/store';
 import { colors, radius, spacing, type } from '@/theme';
 
-/** How the wishlist looks to family and friends — without the app and without login. */
+/**
+ * How the wishlist will look to family and friends, before it is shared. Mirrors the
+ * page on babyklar.app (web/src/guest.ts): no baby name, and never who reserved what.
+ */
 export default function SharedWishlist() {
   const router = useRouter();
   const { state, dispatch } = useApp();
-  const name = state.household.babyName?.trim();
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -29,7 +31,7 @@ export default function SharedWishlist() {
           <View style={styles.heroIcon}>
             <MaterialCommunityIcons name="gift-outline" size={26} color={colors.primary} />
           </View>
-          <Text style={styles.h1}>Ønskeliste{name ? ` til ${name}` : ''}</Text>
+          <Text style={styles.h1}>Ønskeliste til babyen</Text>
           <Text style={[type.body, { textAlign: 'center' }]}>
             Vi har samlet det vi faktisk trenger. Brukt er som regel helt topp.
           </Text>
@@ -55,7 +57,7 @@ export default function SharedWishlist() {
                 </View>
               </View>
               <Button
-                label={w.reservedBy ? `Reservert av ${w.reservedBy}` : 'Reserver'}
+                label={w.reservedBy ? 'Reservert' : 'Reserver'}
                 variant={w.reservedBy ? 'ghost' : 'soft'}
                 icon={w.reservedBy ? 'check' : 'hand-heart-outline'}
                 onPress={() => dispatch({ type: 'toggleWishReserved', id: w.id, by: 'Deg' })}

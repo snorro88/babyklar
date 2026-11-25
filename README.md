@@ -1,7 +1,9 @@
 # BabyKlar — demo
 
 Klikkbar demo av BabyKlar bygget med Expo (React Native) og TypeScript.
-Alt kjører lokalt uten backend: data ligger i en React-context og lagres i AsyncStorage.
+Data ligger i en React-context og lagres i AsyncStorage på enheten. Bare to ting går
+via en server: valgfri bildegjenkjenning (Expo-API-et i `app/api/`) og ønskelister
+som foreldrene selv velger å dele ([babyklar.app](https://babyklar.app), se under).
 
 ## Kom i gang
 
@@ -35,6 +37,36 @@ Vent til Apple har prosessert builden, test den i TestFlight, og velg deretter d
 nye builden i App Store-utkastet. Eksisterende opplastede binærfiler kan ikke
 omdøpes. Et nytt versjonsnummer løser ikke de kjente lanseringsmanglene som er
 beskrevet i [innsendingspakken](app-store/innsendingspakke.html).
+
+## Nettstedet babyklar.app og delt ønskeliste
+
+[web/](web/) er en Cloudflare Worker på domenet `babyklar.app` (kjøpt via Cloudflare
+Registrar 25. november 2026). Den serverer:
+
+- forsiden, [personvern](https://babyklar.app/personvern) og [support](https://babyklar.app/support)
+  fra [web/public/](web/public/)
+- delte ønskelister på `https://babyklar.app/l/<kode>`, der familie og venner kan
+  reservere gaver uten app eller konto ([web/src/guest.ts](web/src/guest.ts))
+- API-et appen bruker under Ønsker → **Lag lenke** ([web/src/api.ts](web/src/api.ts),
+  klient i [src/lib/share.ts](src/lib/share.ts))
+
+Listene ligger i D1-databasen `babyklar`, opprettet med `--jurisdiction eu`. Appen
+lagrer lenken og en hemmelig eiernøkkel i appdataene (og i sikkerhetskopien);
+serveren lagrer bare en hash av nøkkelen. Gjester er anonyme: en reservasjon lagrer
+tidspunkt og en hash av en tilfeldig nettleserkode, slik at samme nettleser kan
+angre. Appen får vite *at* noe er reservert, aldri av hvem. Lister appen ikke har
+vært i kontakt med på 12 måneder, slettes av en nattlig cron.
+
+```powershell
+cd web
+npm install
+npm run dev          # http://localhost:8787 med lokal D1 (kjør npm run db:migrate:local først)
+npm run typecheck
+npm run deploy       # migrerer D1 og publiserer til babyklar.app
+```
+
+Appen peker mot `https://babyklar.app`. Sett `EXPO_PUBLIC_WEB_URL=http://127.0.0.1:8787`
+for å teste appens nettversjon mot `npm run dev`.
 
 ## Support og personvern på nett
 

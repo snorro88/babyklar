@@ -55,8 +55,16 @@ export interface WishItem {
   link?: string;
   priority: 'high' | 'medium' | 'low';
   usedOk: boolean;
+  /** Who reserved it. From the shared link this is always a placeholder: guests stay anonymous. */
   reservedBy?: string;
   bought?: boolean;
+}
+
+/** The wishlist's public link on babyklar.app. The key proves to the server that this phone owns it. */
+export interface WishlistShare {
+  id: string;
+  key: string;
+  url: string;
 }
 
 /** One kind of thing the photo scan recognised. */
@@ -103,6 +111,8 @@ export interface AppState {
   tasks: Task[];
   wishes: WishItem[];
   wardrobe: Record<string, GarmentRow[]>;
+  /** Set once the wishlist has been shared with a link. */
+  share?: WishlistShare;
 }
 
 /** Product type that "Safe favourites" are grouped by, e.g. car seat or stroller. */

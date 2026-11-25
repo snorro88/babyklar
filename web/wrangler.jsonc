@@ -1,0 +1,47 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // babyklar.app: the product page, privacy and support pages, and the shared wishlists
+  // that family and friends open without the app.
+  "name": "babyklar-web",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-25",
+  "routes": [
+    { "pattern": "babyklar.app", "custom_domain": true },
+    { "pattern": "www.babyklar.app", "custom_domain": true }
+  ],
+  // Only the custom domain serves the site; no second public copy on workers.dev.
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // The Worker sees every request so it can redirect www and add security headers.
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "babyklar",
+      // Created with --jurisdiction eu: the shared wishlists are stored in the EU.
+      "database_id": "645da7b6-bcaa-4f07-8941-2122fd0cb5b9",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "ratelimits": [
+    // Per IP: creating new shared lists.
+    { "name": "CREATE_LIMITER", "namespace_id": "4201", "simple": { "limit": 5, "period": 60 } },
+    // Per list: the app's sync, status and delete calls.
+    { "name": "OWNER_LIMITER", "namespace_id": "4202", "simple": { "limit": 60, "period": 60 } },
+    // Per IP: guests reserving and releasing gifts.
+    { "name": "GUEST_LIMITER", "namespace_id": "4203", "simple": { "limit": 30, "period": 60 } }
+  ],
+  "triggers": {
+    // Nightly clean-up of lists the app hasn't been in touch with for 12 months.
+    "crons": ["17 3 * * *"]
+  },
+  "observability": {
+    "enabled": true,
+    "traces": { "enabled": true }
+  }
+}
